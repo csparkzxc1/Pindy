@@ -7,18 +7,17 @@ import { Pill } from '@/components/ui/Pill';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { RegionMapPreview } from '@/components/map/RegionMapPreview';
 import { RegionChip } from '@/components/map/RegionChip';
-import {
-  getRegionById,
-  popularDestinations,
-  visitedSigungu,
-  visitedProvinces,
-} from '@/constants/mockData';
+import { useAppState } from '@/stores/AppContext';
+import type { Region } from '@/types/travel';
 import { colors, radius, shadows, typography } from '@/constants/theme';
 import { formatDateKo } from '@/lib/format';
 
 export default function RegionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const region = id ? getRegionById(id) : undefined;
+  const { visitedSigungu, visitedProvinces, popularDestinations } = useAppState();
+  const region: Region | undefined = id
+    ? [...visitedSigungu, ...visitedProvinces].find((r) => r.id === id)
+    : undefined;
 
   if (!region) {
     return (

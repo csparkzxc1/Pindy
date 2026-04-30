@@ -1,4 +1,5 @@
 import type { Region } from '@/types/travel';
+import { findRegionForPoint, type LngLat, type RegionPolygon } from './geo';
 
 /**
  * Map a list of regions to a list of polygon ids → fill colors.
@@ -13,12 +14,17 @@ export function regionsToFillMap(regions: Region[]): Record<string, string> {
 }
 
 /**
- * Resolve which polygon a (lat, lng) point belongs to.
- * Placeholder — returns undefined until real GeoJSON polygons are wired in.
+ * Resolve which polygon a (lat, lng) point belongs to. Returns the region id
+ * if the point lies inside one of the supplied polygons.
+ *
+ * Polygons are not bundled in MVP — pass an empty array and you get
+ * `undefined`. Once GeoJSON ships, hand them in here.
  */
 export function resolveRegionId(
-  _lat: number,
-  _lng: number,
+  lat: number,
+  lng: number,
+  polygons: RegionPolygon[] = [],
 ): string | undefined {
-  return undefined;
+  const p: LngLat = { latitude: lat, longitude: lng };
+  return findRegionForPoint(p, polygons);
 }

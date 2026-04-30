@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { Tabs, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 import { colors, shadows } from '@/constants/theme';
@@ -63,7 +63,9 @@ export default function TabLayout() {
         name="add"
         options={{
           title: '',
-          tabBarButton: () => <CenterAddButton />,
+          tabBarButton: () => (
+            <CenterAddButton onPress={() => router.push('/add-trip')} />
+          ),
           href: null,
         }}
       />

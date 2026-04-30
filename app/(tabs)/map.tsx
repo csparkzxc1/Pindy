@@ -6,11 +6,12 @@ import { PinMark } from '@/components/brand/PinMark';
 import { WorldMapPreview } from '@/components/map/WorldMapPreview';
 import { ProgressSummaryCard } from '@/components/map/ProgressSummaryCard';
 import { IconButton } from '@/components/ui/IconButton';
-import { travelStats, visitedSigungu, visitedProvinces } from '@/constants/mockData';
+import { useAppState } from '@/stores/AppContext';
 import { colors, typography } from '@/constants/theme';
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
+  const { travelStats, visitedSigungu, visitedProvinces } = useAppState();
 
   const goToFirstDomestic = () => {
     const first = visitedSigungu[0];

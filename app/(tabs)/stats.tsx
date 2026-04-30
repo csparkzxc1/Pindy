@@ -6,11 +6,12 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Card } from '@/components/ui/Card';
 import { RadarChart } from '@/components/stats/RadarChart';
 import { IconButton } from '@/components/ui/IconButton';
-import { travelStats, travelStyle } from '@/constants/mockData';
+import { useAppState } from '@/stores/AppContext';
 import { colors, typography } from '@/constants/theme';
 import { formatNumber } from '@/lib/format';
 
 export default function StatsScreen() {
+  const { travelStats, travelStyle } = useAppState();
   return (
     <Screen scroll>
       <View
