@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -119,7 +119,7 @@ export default function TripDetailScreen() {
             </Text>
             <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
               <Pill
-                label={`${trip.regionIds.length}개 도`}
+                label={`${trip.regionIds.length}개 ${trip.type === 'domestic' ? '시·군' : '도·주'}`}
                 variant="translucent"
               />
               <Pill label={`${trip.cityCount}개 도시`} variant="translucent" />
@@ -165,11 +165,12 @@ export default function TripDetailScreen() {
           {activeTab === '여행지' ? (
             <View style={{ gap: 12 }}>
               <Text style={{ ...typography.h2, color: colors.text }}>
-                방문한 도·주
+                {trip.type === 'domestic' ? '방문한 시·군' : '방문한 도·주'}
               </Text>
               {trip.regionIds.map((rid) => (
-                <View
+                <Pressable
                   key={rid}
+                  onPress={() => router.push(`/region/${rid}`)}
                   style={{
                     backgroundColor: '#FFFFFF',
                     padding: 16,
@@ -180,7 +181,7 @@ export default function TripDetailScreen() {
                   <Text style={{ ...typography.body, color: colors.text }}>
                     {rid}
                   </Text>
-                </View>
+                </Pressable>
               ))}
             </View>
           ) : null}

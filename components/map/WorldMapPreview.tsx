@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadows, typography } from '@/constants/theme';
 import { IconButton } from '@/components/ui/IconButton';
@@ -45,6 +45,8 @@ export type WorldMapPreviewProps = {
   overseasVisited: number;
   overseasTotal: number;
   onLocate?: () => void;
+  onPressDomestic?: () => void;
+  onPressOverseas?: () => void;
 };
 
 export function WorldMapPreview({
@@ -53,6 +55,8 @@ export function WorldMapPreview({
   overseasVisited,
   overseasTotal,
   onLocate,
+  onPressDomestic,
+  onPressOverseas,
 }: WorldMapPreviewProps) {
   return (
     <View
@@ -121,6 +125,7 @@ export function WorldMapPreview({
         valueA={String(domesticVisited)}
         valueB={` / ${domesticTotal}`}
         label="방문한 시·군"
+        onPress={onPressDomestic}
       />
 
       {/* Overseas mini-card (top-right) */}
@@ -131,6 +136,7 @@ export function WorldMapPreview({
         valueA={String(overseasVisited)}
         valueB={` / ${overseasTotal.toLocaleString('ko-KR')}`}
         label="방문한 도·주"
+        onPress={onPressOverseas}
       />
 
       {/* Locate button (bottom-left) */}
@@ -161,11 +167,23 @@ type MiniProps = {
   valueA: string;
   valueB: string;
   label: string;
+  onPress?: () => void;
 };
 
-function MiniCountCard({ top, left, right, accent, valueA, valueB, label }: MiniProps) {
+function MiniCountCard({
+  top,
+  left,
+  right,
+  accent,
+  valueA,
+  valueB,
+  label,
+  onPress,
+}: MiniProps) {
+  const Container: any = onPress ? Pressable : View;
   return (
-    <View
+    <Container
+      onPress={onPress}
       style={{
         position: 'absolute',
         top,
@@ -183,6 +201,6 @@ function MiniCountCard({ top, left, right, accent, valueA, valueB, label }: Mini
         <Text style={{ ...typography.caption, color: colors.muted }}>{valueB}</Text>
       </View>
       <Text style={{ ...typography.caption, color: colors.sub, marginTop: 2 }}>{label}</Text>
-    </View>
+    </Container>
   );
 }

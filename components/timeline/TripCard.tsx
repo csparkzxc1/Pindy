@@ -91,7 +91,10 @@ export function TripCard({ trip, onPress }: TripCardProps) {
 
             {/* Meta row */}
             <Text style={{ ...typography.caption, color: colors.sub, marginTop: 12 }}>
-              🌍 {trip.regionIds.length}개 도·주 · 🏙 {trip.cityCount}개 도시
+              🌍 {trip.regionIds.length}
+              {trip.type === 'domestic' ? '개 시·군' : '개 도·주'}
+              {' · 🏙 '}
+              {trip.cityCount}개 도시
             </Text>
           </View>
         </View>

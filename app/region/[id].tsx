@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Screen } from '@/components/layout/Screen';
 import { Header } from '@/components/layout/Header';
@@ -108,7 +108,13 @@ export default function RegionDetailScreen() {
               아직 근처에 방문한 지역이 없어요.
             </Text>
           ) : (
-            nearby.map((r) => <RegionChip key={r.id} region={r} />)
+            nearby.map((r) => (
+              <RegionChip
+                key={r.id}
+                region={r}
+                onPress={() => router.push(`/region/${r.id}`)}
+              />
+            ))
           )}
         </ScrollView>
       </View>
