@@ -50,7 +50,7 @@ for (let i = 0; i < thresholds.length; i++) {
 | ID | 이름 | 🪪 | 설명 | thresholds | 측정 데이터 | 자동 |
 |----|------|----|------|-----------|------------|------|
 | `city-collector` | 도시 수집가 | 🏙 | 누적 방문 도시 수 | `[3, 8, 15, 25, 50, 100]` | `trip.cityCount` 합산 | ✅ |
-| `explorer` | 탐험가 | 🧭 | 방문한 국가 수 | `[3, 5, 10, 20, 50]` | overseas trip의 country 집합 | 🟡 |
+| `explorer` | 탐험가 | 🧭 | 방문한 국가 수 | `[3, 5, 10, 20, 50]` | overseas trip의 country 집합 | ✅ |
 | `country-hunter` | 국가 헌터 | 🌐 | 국경 넘은 횟수 | `[3, 10, 25, 50, 100]` | overseas trip 1회당 +1 | ✅ |
 | `continent-walker` | 대륙 워커 | 🌍 | 방문 대륙 수 | `[2, 5, 7]` | region → 대륙 매핑 필요 | 🔴 |
 | `korea-master` | 코리아 마스터 | 🇰🇷 | 방문한 한국 시·군 | `[3, 10, 30, 80, 226]` | domestic trip의 `regionIds` 합집합 | ✅ |
@@ -66,7 +66,7 @@ for (let i = 0; i < thresholds.length; i++) {
 | `unesco-seeker` | 유네스코 헌터 | 🛕 | UNESCO 세계유산 | `[3, 10, 25, 50, 100]` | UNESCO 데이터셋 | 🔴 |
 | `small-town-lover` | 소도시 애호가 | 🏘 | 인구 ≤10만 군 방문 | `[1, 5, 15, 30]` | 인구 통계 | 🔴 |
 | `metropolis-fan` | 메트로폴리스 팬 | 🌆 | 인구 100만+ 도시 | `[1, 5, 10, 25]` | 인구 통계 | 🔴 |
-| `border-crosser` | 국경 넘는 자 | 🛂 | 한 trip에서 2국가+ | `[1, 3, 5, 10]` | overseas trip의 unique country 수 | 🟡 |
+| `border-crosser` | 국경 넘는 자 | 🛂 | 한 trip에서 2국가+ | `[1, 3, 5, 10]` | overseas trip의 unique country 수 | ✅ |
 
 ---
 
@@ -90,17 +90,17 @@ for (let i = 0; i < thresholds.length; i++) {
 | ID | 이름 | 🪪 | 설명 | thresholds | 측정 데이터 | 자동 |
 |----|------|----|------|-----------|------------|------|
 | `weekend-traveler` | 주말여행자 | 🎒 | 금/토 시작 + 3일 이내 | `[5, 10, 20, 40]` | `startDate` 요일 + days | ✅ |
-| `monthly-traveler` | 월간 여행자 | 📅 | 매달 1회 이상 (개월 수) | `[3, 6, 12, 24]` | 월별 trip 카운트 | 🟡 |
+| `monthly-traveler` | 월간 여행자 | 📅 | 매달 1회 이상 (개월 수) | `[3, 6, 12, 24]` | 월별 trip 카운트 | ✅ |
 | `spring-traveler` | 봄의 여행자 | 🌸 | 3–5월 시작 trip | `[1, 3, 5, 10]` | `startDate.getMonth()` | ✅ |
 | `summer-traveler` | 여름의 여행자 | 🏖 | 6–8월 시작 trip | `[1, 3, 5, 10]` | 동일 | ✅ |
 | `autumn-traveler` | 가을의 여행자 | 🍁 | 9–11월 시작 trip | `[1, 3, 5, 10]` | 동일 | ✅ |
 | `winter-traveler` | 겨울의 여행자 | ❄ | 12–2월 시작 trip | `[1, 3, 5, 10]` | 동일 | ✅ |
-| `weekday-warrior` | 평일 전사 | 💼 | 월–목 시작 trip | `[5, 15, 30, 60]` | `startDate` 요일 | 🟡 |
+| `weekday-warrior` | 평일 전사 | 💼 | 월–목 시작 trip | `[5, 15, 30, 60]` | `startDate` 요일 | ✅ |
 | `holiday-hunter` | 공휴일 헌터 | 🎌 | 공휴일과 겹침 | `[5, 15, 30]` | 공휴일 캘린더 | 🔴 |
 | `long-trip` | 장거리 여행자 | ✈ | 7일 이상 trip | `[1, 3, 5, 10]` | `endDate - startDate` | ✅ |
 | `quick-getaway` | 짧은 휴식 | ⏱ | 1박 2일 trip | `[1, 5, 15, 30]` | 동일 | ✅ |
-| `consecutive-month` | 연속 여행자 | 🔥 | 연속 달 streak | `[3, 6, 12]` | trips의 시작 월 streak 계산 | 🟡 |
-| `four-seasons` | 사계절 | 🌈 | 한 도시 사계절 방문 | `[1, 3, 5]` | regionId × 계절 cross | 🟡 |
+| `consecutive-month` | 연속 여행자 | 🔥 | 연속 달 streak | `[3, 6, 12]` | trips의 시작 월 streak 계산 | ✅ |
+| `four-seasons` | 사계절 | 🌈 | 한 도시 사계절 방문 | `[1, 3, 5]` | regionId × 계절 cross | ✅ |
 
 ---
 
@@ -109,17 +109,17 @@ for (let i = 0; i < thresholds.length; i++) {
 | ID | 이름 | 🪪 | 설명 | thresholds | 측정 데이터 | 자동 |
 |----|------|----|------|-----------|------------|------|
 | `early-bird` | 얼리버드 | 🌅 | 06:00 이전 사진 | `[5, 15, 30, 60, 100]` | EXIF DateTimeOriginal | 🔴 |
-| `foodie` | 미식가 | 🍜 | `travelStyle.미식` 점수 | `[10, 25, 50, 100]` | TravelStyle 누적 | 🟡 |
+| `foodie` | 미식가 | 🍜 | `travelStyle.미식` 점수 (×100) | `[10, 25, 50, 100]` | TravelStyle 누적 | ✅ |
 | `night-owl` | 야행성 | 🌙 | 자정–04:00 사진 | `[5, 20, 50, 100]` | EXIF DateTimeOriginal | 🔴 |
 | `coffee-lover` | 커피 애호가 | ☕ | 카페 방문 기록 | `[5, 20, 50, 100]` | POI 카테고리 | 🔴 |
 | `dessert-hunter` | 디저트 헌터 | 🍰 | 디저트 POI/사진 | `[5, 20, 50, 100]` | POI 또는 사진 분류 | 🔴 |
 | `wine-traveler` | 와인 여행자 | 🍷 | 와인 산지 방문 | `[1, 3, 5, 10]` | 와인 산지 화이트리스트 | 🔴 |
 | `festival-goer` | 축제 참여자 | 🎉 | 축제 기간 trip | `[1, 3, 5, 10]` | 축제 캘린더 | 🔴 |
-| `solo-explorer` | 솔로 탐험가 | 🥾 | `members.length === 1` | `[1, 3, 5, 10]` | `trip.members` | 🟡 |
+| `solo-explorer` | 솔로 탐험가 | 🥾 | `members.length === 1` | `[1, 3, 5, 10]` | `trip.members` | ✅ |
 | `family-tripper` | 가족 여행자 | 👨‍👩‍👧 | 가족 태그 멤버 포함 | `[1, 3, 5, 10]` | `trip.members` 메타 (역할 태그) | 🔴 |
-| `couple-getaway` | 커플 여행자 | 💑 | `members.length === 2` | `[1, 3, 5, 10]` | `trip.members` | 🟡 |
-| `first-trip` | 첫 여행 | ⭐ | 첫 trip 마일스톤 | `[1]` | `trips.length === 1` | 🟡 |
-| `milestone-100` | 100번째 여행 | 💯 | 누적 trip 마일스톤 | `[10, 25, 50, 100]` | `trips.length` | 🟡 |
+| `couple-getaway` | 커플 여행자 | 💑 | `members.length === 2` | `[1, 3, 5, 10]` | `trip.members` | ✅ |
+| `first-trip` | 첫 여행 | ⭐ | 첫 trip 마일스톤 | `[1]` | `trips.length >= 1` | ✅ |
+| `milestone-100` | 100번째 여행 | 💯 | 누적 trip 마일스톤 | `[10, 25, 50, 100]` | `trips.length` | ✅ |
 
 ---
 
@@ -127,23 +127,38 @@ for (let i = 0; i < thresholds.length; i++) {
 
 | 측정 | 개수 | 비중 |
 |------|------|------|
-| ✅ 현재 자동 dispatch | **13** | 26% |
-| 🟡 데이터 있음, dispatch 미연결 | **10** | 20% |
+| ✅ 현재 자동 dispatch | **23** | 46% |
+| 🟡 데이터 있음, dispatch 미연결 | **0** | 0% |
 | 🔴 추가 인프라 필요 | **27** | 54% |
 
-### 즉시 자동화 가능한 10개 (🟡)
-다음 데이터로 측정 가능 — `addTrip` 또는 별도 effect에서 dispatch만 추가하면 됩니다:
+### 자동 측정 23개 (✅)
 
-1. `explorer` — `new Set(overseas trip의 country)` 크기
-2. `border-crosser` — overseas trip의 unique country 수가 ≥ 2일 때 +1
-3. `monthly-traveler` — 시작 월별 trip 카운트로 갱신
-4. `weekday-warrior` — `startDate` 요일이 월–목이면 +1
-5. `consecutive-month` — `trips`를 시작 월로 정렬해 streak 계산
-6. `four-seasons` — `Map<regionId, Set<season>>` 채워서 4개 다 모인 region 수
-7. `foodie` — `travelStyle.미식 * 100`
-8. `solo-explorer` — `trip.members.length === 1` 1회당 +1
-9. `couple-getaway` — `trip.members.length === 2` 1회당 +1
-10. `first-trip` / `milestone-100` — `trips.length`가 1/10/25/50/100 도달 시 trigger
+`AppContext`가 `trips` 변경 시 `computeAbsoluteProgress(trips, travelStyle)`로 다음 23개 배지의 progress를 매번 절대값으로 다시 계산합니다 (idempotent).
+
+| 배지 | 측정 |
+|------|------|
+| `city-collector` | `Σ trip.cityCount` |
+| `photographer` / `memory-keeper` | `Σ trip.photoCount` |
+| `country-hunter` | overseas trip 개수 |
+| `korea-master` | domestic 시군 unique 합집합 |
+| `explorer` | overseas trip 국가 unique |
+| `border-crosser` | 한 trip에 ≥2개 국가인 trip 수 |
+| `long-trip` | 7일 이상 trip 수 |
+| `quick-getaway` | 1박 2일 trip 수 |
+| `weekend-traveler` | 금/토 시작 + 3일 이내 trip 수 |
+| `weekday-warrior` | 월–목 시작 trip 수 |
+| `monthly-traveler` | unique 월(YYYY-MM) 수 |
+| `consecutive-month` | 연속 월 streak 최댓값 |
+| `four-seasons` | 4계절 모두 방문한 region 수 |
+| `spring-traveler` | 3–5월 시작 trip |
+| `summer-traveler` | 6–8월 시작 trip |
+| `autumn-traveler` | 9–11월 시작 trip |
+| `winter-traveler` | 12–2월 시작 trip |
+| `solo-explorer` | `members.length === 1` trip 수 |
+| `couple-getaway` | `members.length === 2` trip 수 |
+| `first-trip` | `trips.length >= 1 ? 1 : 0` |
+| `milestone-100` | `trips.length` |
+| `foodie` | `Math.round(travelStyle.미식 * 100)` |
 
 ### 추가 인프라 필요한 27개 (🔴)
 | 인프라 | 영향 받는 배지 |

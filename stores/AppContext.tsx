@@ -1,4 +1,11 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   popularDestinations as initialPopular,
   trips as initialTrips,
@@ -8,6 +15,7 @@ import {
   visitedSigungu as initialSigungu,
 } from '@/constants/mockData';
 import { mockBadges } from '@/constants/mockBadges';
+import { computeAbsoluteProgress } from '@/features/badges/computeProgress';
 import type {
   PopularDestination,
   Region,
@@ -28,13 +36,36 @@ type AppState = {
   markRegionVisited: (regionId: string) => void;
   removeTrip: (tripId: string) => void;
 
-  // v4 신규 — 기존 key 유지, 추가만
   badges: Badge[];
   unlockedBadgeCount: number;
   updateBadgeProgress: (id: BadgeId, delta: number) => void;
 };
 
 const AppContext = createContext<AppState | null>(null);
+
+function recomputeLevel(b: Badge, nextProgress: number): Badge {
+  let level: BadgeLevel = 0;
+  for (let i = 0; i < b.thresholds.length; i++) {
+    const threshold = b.thresholds[i];
+    if (threshold !== undefined && nextProgress >= threshold) {
+      const lv = i + 1;
+      level = (lv > 5 ? 5 : lv) as BadgeLevel;
+    }
+  }
+  const upcoming =
+    b.thresholds[level] ?? b.thresholds[b.thresholds.length - 1] ?? nextProgress;
+  const wasLocked = b.level === 0 && level > 0;
+  return {
+    ...b,
+    progress: nextProgress,
+    level,
+    nextThreshold: upcoming,
+    unlockedAt:
+      wasLocked && !b.unlockedAt
+        ? new Date().toISOString().slice(0, 10)
+        : b.unlockedAt,
+  };
+}
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [trips, setTrips] = useState<Trip[]>(initialTrips);
@@ -63,33 +94,24 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const updateBadgeProgress = useCallback((id: BadgeId, delta: number) => {
     setBadges((prev) =>
-      prev.map((b) => {
-        if (b.id !== id) return b;
-        const next = b.progress + delta;
-        let nextLevel: BadgeLevel = 0;
-        for (let i = 0; i < b.thresholds.length; i++) {
-          const threshold = b.thresholds[i];
-          if (threshold !== undefined && next >= threshold) {
-            const lv = i + 1;
-            nextLevel = (lv > 5 ? 5 : lv) as BadgeLevel;
-          }
-        }
-        const upcoming =
-          b.thresholds[nextLevel] ?? b.thresholds[b.thresholds.length - 1] ?? next;
-        const wasLocked = b.level === 0 && nextLevel > 0;
-        return {
-          ...b,
-          progress: next,
-          level: nextLevel,
-          nextThreshold: upcoming,
-          unlockedAt:
-            wasLocked && !b.unlockedAt
-              ? new Date().toISOString().slice(0, 10)
-              : b.unlockedAt,
-        };
-      }),
+      prev.map((b) => (b.id === id ? recomputeLevel(b, b.progress + delta) : b)),
     );
   }, []);
+
+  // Auto-recompute badges from trips + travelStyle. Idempotent.
+  // Only updates badges whose ID appears in the absolute map; locked badges
+  // that need extra infra (EXIF time, photo classifier, etc.) are left alone.
+  useEffect(() => {
+    const absolute = computeAbsoluteProgress(trips, initialStyle);
+    setBadges((prev) =>
+      prev.map((b) => {
+        const next = absolute[b.id];
+        if (next === undefined) return b;
+        if (next === b.progress) return b;
+        return recomputeLevel(b, next);
+      }),
+    );
+  }, [trips]);
 
   const travelStats = useMemo<TravelStats>(() => {
     const visitedSig = sigungu.filter((r) => r.visited).length;
