@@ -1,0 +1,1354 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pindy Mockup — v4</title>
+    <style>
+      :root {
+        /* mirror constants/theme.ts */
+        --bg: #faf7f2;
+        --bg-alt: #ffffff;
+        --card: #ffffff;
+        --text: #1f2937;
+        --sub: #6b7280;
+        --muted: #9ca3af;
+        --line: #e5e7eb;
+        --line-soft: #f3f4f6;
+
+        --primary: #fb7185;
+        --primary-dark: #e11d48;
+        --primary-soft: #fecdd3;
+        --primary-wash: #fff1f2;
+
+        --mint: #34d399;
+        --mint-dark: #10b981;
+        --mint-soft: #a7f3d0;
+        --mint-wash: #ecfdf5;
+
+        --yellow: #fcd34d;
+        --yellow-soft: #fef3c7;
+        --yellow-wash: #fffbeb;
+
+        --pink: #f9a8d4;
+        --pink-soft: #fce7f3;
+
+        --peach: #fed7aa;
+
+        --region-empty: #e5e7eb;
+
+        --badge-city: #fb7185;
+        --badge-explorer: #fcd34d;
+        --badge-photo: #a78bfa;
+        --badge-early: #34d399;
+        --badge-weekend: #f9a8d4;
+        --badge-foodie: #fb923c;
+
+        --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.05);
+        --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+        --shadow-floating: 0 8px 16px rgba(251, 113, 133, 0.25);
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI",
+          Roboto, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+        background: #1c1d22;
+        color: var(--text);
+      }
+
+      h1.page-title {
+        color: #fff;
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: -0.5px;
+        margin: 0 0 4px;
+      }
+      .page-sub {
+        color: #9ca3af;
+        margin: 0 0 32px;
+        font-size: 14px;
+      }
+
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+      }
+
+      .frame {
+        position: relative;
+        width: 393px;
+        flex: 0 0 393px;
+      }
+
+      .frame .label {
+        color: #9ca3af;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+      }
+
+      .frame .phone {
+        width: 393px;
+        height: 720px;
+        background: var(--bg);
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+        border: 1px solid #2a2c33;
+      }
+
+      .statusbar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        z-index: 10;
+      }
+      .statusbar.on-color {
+        color: #fff;
+      }
+      .notch {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 110px;
+        height: 30px;
+        background: #000;
+        border-radius: 24px;
+        z-index: 11;
+      }
+
+      .screen {
+        position: absolute;
+        inset: 0;
+        padding-top: 44px;
+        overflow: hidden;
+      }
+
+      /* Tab bar (5-tab) */
+      .tabbar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 84px;
+        background: #fff;
+        border-top: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        align-items: flex-start;
+        padding-top: 8px;
+        z-index: 5;
+      }
+      .tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .tab.active {
+        color: var(--primary);
+      }
+      .tab .icon {
+        font-size: 22px;
+        line-height: 1;
+      }
+      .tab.add {
+        margin-top: -20px;
+      }
+      .tab.add .icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 28px;
+        background: var(--primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-floating);
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      /* Commons */
+      .pad {
+        padding: 0 20px;
+      }
+      .h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0;
+      }
+      .h2 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+      }
+      .display {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.2;
+      }
+      .body {
+        font-size: 14px;
+        color: var(--sub);
+        line-height: 20px;
+      }
+      .caption {
+        font-size: 12px;
+        color: var(--sub);
+        line-height: 16px;
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: 24px;
+        box-shadow: var(--shadow-card);
+        padding: 16px;
+      }
+
+      .pill {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .pill.primary-active {
+        background: var(--primary);
+        color: #fff;
+      }
+      .pill.primary {
+        background: var(--primary-wash);
+        color: var(--primary);
+      }
+      .pill.mint {
+        background: var(--mint-wash);
+        color: var(--mint-dark);
+      }
+      .pill.translucent {
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+      }
+
+      .button {
+        height: 56px;
+        border-radius: 999px;
+        background: var(--primary);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .button.secondary {
+        background: var(--primary-wash);
+        color: var(--primary);
+      }
+      .button.ghost {
+        background: transparent;
+        color: var(--sub);
+      }
+      .button.mint {
+        background: var(--mint);
+      }
+
+      .progress {
+        height: 8px;
+        border-radius: 4px;
+        background: var(--primary-wash);
+        overflow: hidden;
+      }
+      .progress > .bar {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 4px;
+      }
+
+      .icon-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 18px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-soft);
+      }
+
+      /* ============ Onboarding 1 ============ */
+      .ob1 {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 50%, #faf7f2 100%);
+        padding: 60px 24px 48px;
+        display: flex;
+        flex-direction: column;
+      }
+      .skip {
+        align-self: flex-end;
+        font-size: 14px;
+        color: var(--sub);
+      }
+      .illo {
+        width: 280px;
+        height: 280px;
+        margin: auto;
+        position: relative;
+      }
+      .blob {
+        position: absolute;
+        border-radius: 60px;
+        opacity: 0.6;
+      }
+      .blob.b1 { top:10px;  left:10px;  width:110px; height:90px;  background:#FECDD3; }
+      .blob.b2 { top:20px;  left:170px; width:90px;  height:70px;  background:#FEF3C7; opacity:.55;}
+      .blob.b3 { top:160px; left:20px;  width:100px; height:90px;  background:#A7F3D0; opacity:.5;}
+      .blob.b4 { top:170px; left:170px; width:95px;  height:80px;  background:#FCE7F3; opacity:.6;}
+      .pin {
+        position: absolute;
+        font-size: 28px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+      }
+      .pin.coral { color: var(--primary); top:60px; left:60px; }
+      .pin.yellow { color: var(--yellow); top:80px; left:180px;}
+      .pin.mint { color: var(--mint); top:170px; left:200px;}
+      .plane { position: absolute; top:20px; right:20px; opacity:.5; font-size:22px; color: var(--primary);}
+      .dot { position:absolute; width:5px; height:5px; border-radius:3px; background: var(--primary); opacity:.45;}
+
+      .titles { text-align: center; }
+      .titles .display { margin-bottom: 12px; }
+
+      .footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 32px;
+      }
+      .dots { display:flex; gap:6px; align-items:center;}
+      .pdot { width:8px; height:8px; border-radius:4px; background: var(--line);}
+      .pdot.active { width:24px; background: var(--primary);}
+      .next-btn {
+        width: 56px; height: 56px; border-radius: 28px;
+        background: var(--primary); color:#fff;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: var(--shadow-floating);
+        font-size: 22px;
+      }
+
+      /* ============ Onboarding 2 ============ */
+      .ob2 {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 50%, #FAF7F2 100%);
+        padding: 60px 24px 48px;
+        display: flex;
+        flex-direction: column;
+      }
+      .ob2 .next-btn { background: var(--mint); box-shadow: 0 8px 16px rgba(52,211,153,.25);}
+      .ob2 .pdot.active { background: var(--mint);}
+      .ob2 .map-card {
+        margin: auto;
+        width: 280px; height: 280px;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: var(--shadow-card);
+        position: relative;
+        overflow: hidden;
+      }
+      .base-dot { position:absolute; width:5px; height:5px; border-radius:50%; background:#E5E7EB;}
+      .visit-dot { position:absolute; width:11px; height:11px; border-radius:50%; border:2px solid #fff; box-shadow: var(--shadow-soft);}
+      .path-dot { position:absolute; width:4px; height:4px; border-radius:50%; background: var(--primary); opacity:.5;}
+
+      /* ============ Permission ============ */
+      .perm {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, #FFF1F2 0%, #FEF3C7 50%, #FAF7F2 100%);
+        padding: 60px 24px 24px;
+        display: flex; flex-direction: column;
+      }
+      .perm .center {flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+      .perm .pin-box {
+        width:80px; height:96px; border-radius:24px; background: var(--primary);
+        display:flex; align-items:center; justify-content:center;
+        position: relative;
+        box-shadow: var(--shadow-floating);
+        font-size:48px; color:#fff;
+      }
+      .perm .cam-badge {
+        position:absolute; bottom:-8px; right:-8px;
+        width:36px; height:36px; border-radius:18px; background:#fff;
+        display:flex; align-items:center; justify-content:center;
+        font-size:18px; color: var(--primary);
+        box-shadow: var(--shadow-soft);
+      }
+      .perm h2 { font-size:22px; font-weight:700; text-align:center; margin:32px 0 12px;}
+      .perm p { text-align:center; color: var(--sub); font-size:14px; line-height:20px; margin:0;}
+
+      /* ============ Map screen ============ */
+      .map-header {
+        padding: 16px 20px 0;
+        display:flex; align-items:flex-start; justify-content:space-between;
+      }
+      .pindy-mark {
+        font-size: 28px; font-weight: 800; color: var(--primary);
+        letter-spacing: -.5px; line-height: 1.1;
+      }
+      .pin-icon-mark {
+        display:inline-block; width:24px; height:24px; vertical-align: middle;
+        margin-right: 4px;
+      }
+      .world-map {
+        margin: 16px 20px 0;
+        height: 400px;
+        background: #F1F5F9;
+        border-radius: 32px;
+        position: relative;
+        box-shadow: var(--shadow-card);
+        overflow: hidden;
+      }
+      .world-map .wash {
+        position:absolute; top:30px; left:30px; right:30px; bottom:30px;
+        background: #E0F2FE; border-radius:24px; opacity:.4;
+      }
+      .continent { position: absolute; opacity:.85;}
+      .mini-card {
+        position: absolute; background:#fff; border-radius:20px;
+        padding: 10px 12px; box-shadow: var(--shadow-soft);
+      }
+      .mini-card .num { font-size:18px; font-weight:700; line-height:1;}
+      .mini-card .lbl { font-size:11px; color: var(--sub); margin-top:4px;}
+      .progress-card { margin: 16px 20px 0; }
+
+      /* ============ Timeline ============ */
+      .filters { display:flex; gap:8px; padding:16px 20px;}
+      .month-h { padding: 16px 20px 8px; font-size:16px; font-weight:600;}
+      .trip-card { margin: 0 20px 16px; padding:16px;}
+      .trip-row { display:flex; gap:12px;}
+      .date-badge {
+        width:64px; height:64px; border-radius:20px; background: var(--primary-wash);
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+      }
+      .date-badge .m { font-size:11px; font-weight:700; color: var(--primary); letter-spacing:1px;}
+      .date-badge .d { font-size:18px; font-weight:700; color: var(--primary);}
+      .photo-strip { display:flex; gap:6px; margin-top:12px;}
+      .photo-strip .ph {
+        width:56px; height:56px; border-radius:16px;
+        position: relative; overflow:hidden;
+      }
+      .photo-strip .ph .more {
+        position:absolute; inset:0; background: rgba(0,0,0,.6);
+        display:flex; align-items:center; justify-content:center;
+        color:#fff; font-weight:700; font-size:14px;
+      }
+
+      /* ============ Stats ============ */
+      .stat-row { display:flex; gap:12px; padding: 8px 20px 0;}
+      .stat-card { flex:1; min-height:120px; padding:16px; position:relative;}
+      .stat-card .v { font-size:28px; font-weight:700; line-height:1;}
+      .stat-card .v.coral { color: var(--primary);}
+      .stat-card .v.mint { color: var(--mint-dark);}
+      .stat-card .total { font-size:12px; color: var(--muted); margin-top:4px;}
+      .stat-card .icon { position:absolute; right:16px; bottom:16px; font-size:22px;}
+
+      /* radar */
+      .radar { width:240px; height:240px; margin: 8px auto 0; position:relative;}
+
+      /* ============ Profile ============ */
+      .profile-header { padding:16px 20px; display:flex; align-items:center; justify-content:space-between;}
+      .profile-card { margin: 8px 20px 0; padding: 20px;}
+      .profile-row { display:flex; align-items:center; gap:16px;}
+      .avatar {
+        width:80px; height:80px; border-radius:40px;
+        background: var(--primary-wash);
+        display:flex; align-items:center; justify-content:center;
+        font-size:30px; font-weight:700; color: var(--primary);
+      }
+
+      .stat4 { display:flex; }
+      .stat4 .col { flex:1; text-align:center; padding: 0 4px;}
+      .stat4 .col .v { font-size:24px; font-weight:700; color: var(--text);}
+      .stat4 .col .l { font-size:12px; color: var(--sub); margin-top:2px;}
+      .stat4 .div { width:1px; background: var(--line); align-self: stretch; margin: 8px 0;}
+
+      .badge-row { display:flex; gap:12px; padding: 0 20px;}
+      .badge-circle {
+        width:80px; height:80px; border-radius:40px;
+        background: var(--primary);
+        display:flex; align-items:center; justify-content:center;
+        position: relative;
+        box-shadow: var(--shadow-soft);
+      }
+      .badge-circle .inner {
+        width:68px; height:68px; border-radius:34px; background:#fff;
+        display:flex; align-items:center; justify-content:center;
+        font-size:32px;
+      }
+      .badge-circle .lv {
+        position:absolute; bottom:-4px; right:-2px;
+        background:#fff; border-radius:10px; padding:2px 6px;
+        border:1.5px solid var(--primary);
+        font-size:10px; font-weight:700; color: var(--primary);
+      }
+      .badge-card { display:flex; flex-direction:column; align-items:center; width:104px;}
+      .badge-card .name { font-size:12px; font-weight:700; color: var(--text); margin-top:10px;}
+
+      .photo-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:4px; padding: 0 20px;}
+      .photo-grid .cell { aspect-ratio: 1/1; border-radius: 12px; }
+
+      /* ============ Trip detail ============ */
+      .hero {
+        position: absolute; top:0; left:0; right:0; height: 360px;
+      }
+      .hero-overlay { position:absolute; inset:0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,.55) 100%);}
+      .hero-top { position:absolute; top:60px; left:20px; right:20px; display:flex; justify-content:space-between;}
+      .hero-bot { position:absolute; bottom:24px; left:20px; right:20px; color:#fff;}
+      .hero-bot .display { color:#fff;}
+      .hero-bot .body { color: rgba(255,255,255,.9); margin-top:2px;}
+
+      .tabs-card {
+        position:absolute; top:336px; left:0; right:0;
+        background:#fff;
+        border-top-left-radius: 24px; border-top-right-radius: 24px;
+        padding: 20px 20px 16px;
+        box-shadow: var(--shadow-card);
+      }
+      .photo-grid-3 {
+        position:absolute; top:416px; left:0; right:0; padding: 0 20px;
+        display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;
+      }
+      .photo-grid-3 .cell { aspect-ratio:1/1; border-radius:16px; position:relative; overflow:hidden;}
+      .photo-grid-3 .cell .more { position:absolute; inset:0; background:rgba(0,0,0,.5); color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center;}
+
+      .bottom-cta {
+        position: absolute; bottom:0; left:0; right:0;
+        background: var(--bg);
+        padding: 12px 20px 16px;
+        border-top:1px solid var(--line-soft);
+        display:flex; gap:8px;
+      }
+      .bottom-cta .btn { height:56px; border-radius:999px; flex:2; display:flex; align-items:center; justify-content:center; background: var(--primary); color:#fff; font-weight:700;}
+      .bottom-cta .btn.share { flex:1; background: var(--primary-wash); color: var(--primary);}
+
+      /* ============ Region detail ============ */
+      .topbar { padding: 12px 20px; display:flex; align-items:center; justify-content:space-between;}
+      .region-h { display:flex; align-items:flex-start; justify-content:space-between; padding: 8px 20px 0;}
+      .region-map {
+        margin: 16px 20px 0; height: 200px;
+        background: #F1F5F9; border-radius: 24px;
+        position: relative; overflow: hidden;
+      }
+
+      /* ============ Badges screen ============ */
+      .b-section { padding: 8px 20px 0; }
+      .b-row {
+        display:flex; gap:12px; overflow-x: auto; padding: 8px 0; padding-left: 20px;
+        scrollbar-width: none;
+      }
+      .b-row::-webkit-scrollbar { display:none; }
+      .b-section h2 { padding: 16px 20px 8px; margin:0;}
+
+      /* ============ Add-trip modal ============ */
+      .modal {
+        position:absolute; inset:0; background: var(--bg);
+        padding: 60px 20px 16px;
+      }
+      .action-card {
+        display:flex; align-items:center; gap:12px;
+        padding:16px; background:#fff; border-radius:24px; box-shadow: var(--shadow-card);
+        margin-bottom: 12px;
+      }
+      .action-card .ico {
+        width:48px; height:48px; border-radius:16px;
+        display:flex; align-items:center; justify-content:center;
+        font-size:22px;
+      }
+
+      /* ============ Story templates ============ */
+      .template-grid {
+        display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding: 16px 20px;
+      }
+      .template-card {
+        aspect-ratio:1/1; border-radius:20px; padding:12px;
+        display:flex; flex-direction: column; justify-content:flex-end;
+        box-shadow: var(--shadow-soft);
+      }
+      .template-card .label {
+        background: rgba(255,255,255,.85); align-self: flex-start;
+        padding: 4px 10px; border-radius: 999px;
+        font-size:11px; font-weight:700; color: var(--text);
+      }
+
+      /* ============ Story editor ============ */
+      .editor {
+        position:absolute; inset:0; background:#1F2937;
+        display:flex; flex-direction:column;
+      }
+      .editor-top {
+        display:flex; justify-content:space-between; align-items:center;
+        padding: 50px 16px 8px;
+      }
+      .editor-canvas-wrap {flex:1; display:flex; align-items:center; justify-content:center; padding: 16px;}
+      .canvas {
+        width: 280px; height: calc(280px * 16 / 9);
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius:20px;
+        position:relative;
+        box-shadow: var(--shadow-card);
+        overflow:hidden;
+      }
+      .canvas .photo-slot {
+        position:absolute;
+        background: linear-gradient(135deg, #FECDD3, #FB7185);
+        border-radius:12px;
+      }
+      .canvas .text-slot {
+        position:absolute; color:#fff; font-weight:700;
+      }
+      .canvas .watermark {
+        position:absolute; right:12px; bottom:10px;
+        background: rgba(0,0,0,.18); color: rgba(255,255,255,.85);
+        padding: 3px 8px; border-radius:999px;
+        font-size:9px; font-weight:700; letter-spacing:.5px;
+      }
+      .editor-tool-panel {
+        background:#fff; padding: 16px 20px;
+      }
+      .editor-tabbar {
+        background:#fff; display:grid; grid-template-columns: repeat(5, 1fr);
+        padding: 12px 8px 20px; border-top:1px solid var(--line-soft);
+      }
+      .editor-tabbar .t { text-align:center; font-size:11px; color: var(--muted); font-weight:600;}
+      .editor-tabbar .t.active { color: var(--primary);}
+
+      .toggle {
+        width:36px; height:22px; border-radius:11px; background: var(--primary);
+        position:relative; padding:2px;
+      }
+      .toggle .knob {width:18px; height:18px; border-radius:9px; background:#fff; margin-left: auto;}
+
+      /* small icon helpers */
+      .ion { font-style: normal; }
+    </style>
+  </head>
+
+  <body>
+    <h1 class="page-title">Pindy — UI Mockup</h1>
+    <p class="page-sub">v3 base + v4 Phase 1.5 화면. 토큰은 constants/theme.ts와 동기화. iPhone 15 (393×720 압축).</p>
+
+    <div class="grid">
+      <!-- 1. ONBOARDING 1 -->
+      <div class="frame">
+        <div class="label">1 · Onboarding 1</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="ob1">
+            <div class="skip">건너뛰기</div>
+            <div class="illo">
+              <div class="blob b1"></div><div class="blob b2"></div>
+              <div class="blob b3"></div><div class="blob b4"></div>
+              <span class="plane">✈</span>
+              <span class="pin coral">📍</span>
+              <span class="pin yellow">📍</span>
+              <span class="pin mint">📍</span>
+              <span class="dot" style="top:200px; left:50px;"></span>
+              <span class="dot" style="top:170px; left:60px;"></span>
+              <span class="dot" style="top:140px; left:70px;"></span>
+              <span class="dot" style="top:110px; left:85px;"></span>
+              <span class="dot" style="top:90px; left:110px;"></span>
+              <span class="dot" style="top:80px; left:145px;"></span>
+              <span class="dot" style="top:80px; left:180px;"></span>
+              <span class="dot" style="top:95px; left:210px;"></span>
+              <span class="dot" style="top:130px; left:225px;"></span>
+            </div>
+            <div class="titles">
+              <div class="display">당신의 여행을,<br/>색으로 남기세요</div>
+              <div class="body">여행의 순간을 기록하고<br/>나만의 컬러로 세계를 채워보세요.</div>
+            </div>
+            <div class="footer-row">
+              <div class="dots"><span class="pdot active"></span><span class="pdot"></span><span class="pdot"></span></div>
+              <div class="next-btn">→</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. ONBOARDING 2 -->
+      <div class="frame">
+        <div class="label">2 · Onboarding 2</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="ob2">
+            <div class="skip">건너뛰기</div>
+            <div class="map-card">
+              <!-- 베이스 도트 (대륙 추상화) -->
+              <script>0</script>
+              <!-- generated below via inline -->
+              <span class="base-dot" style="top:50px;left:20px"></span>
+              <span class="base-dot" style="top:55px;left:35px"></span>
+              <span class="base-dot" style="top:60px;left:50px"></span>
+              <span class="base-dot" style="top:50px;left:65px"></span>
+              <span class="base-dot" style="top:65px;left:80px"></span>
+              <span class="base-dot" style="top:80px;left:30px"></span>
+              <span class="base-dot" style="top:90px;left:45px"></span>
+              <span class="base-dot" style="top:100px;left:60px"></span>
+              <span class="base-dot" style="top:110px;left:50px"></span>
+              <span class="base-dot" style="top:120px;left:65px"></span>
+              <span class="base-dot" style="top:130px;left:55px"></span>
+              <span class="base-dot" style="top:50px;left:100px"></span>
+              <span class="base-dot" style="top:60px;left:115px"></span>
+              <span class="base-dot" style="top:55px;left:130px"></span>
+              <span class="base-dot" style="top:90px;left:110px"></span>
+              <span class="base-dot" style="top:105px;left:125px"></span>
+              <span class="base-dot" style="top:120px;left:115px"></span>
+              <span class="base-dot" style="top:140px;left:130px"></span>
+              <span class="base-dot" style="top:50px;left:160px"></span>
+              <span class="base-dot" style="top:60px;left:180px"></span>
+              <span class="base-dot" style="top:55px;left:200px"></span>
+              <span class="base-dot" style="top:70px;left:215px"></span>
+              <span class="base-dot" style="top:80px;left:225px"></span>
+              <span class="base-dot" style="top:90px;left:210px"></span>
+              <span class="base-dot" style="top:100px;left:195px"></span>
+              <span class="base-dot" style="top:130px;left:185px"></span>
+              <span class="base-dot" style="top:140px;left:200px"></span>
+              <span class="base-dot" style="top:155px;left:215px"></span>
+              <span class="base-dot" style="top:165px;left:200px"></span>
+
+              <span class="path-dot" style="top:70px;left:60px"></span>
+              <span class="path-dot" style="top:65px;left:90px"></span>
+              <span class="path-dot" style="top:62px;left:115px"></span>
+              <span class="path-dot" style="top:60px;left:145px"></span>
+              <span class="path-dot" style="top:60px;left:175px"></span>
+
+              <span class="visit-dot" style="top:65px;left:45px;background: var(--primary);"></span>
+              <span class="visit-dot" style="top:55px;left:105px;background: var(--yellow);"></span>
+              <span class="visit-dot" style="top:60px;left:195px;background: var(--mint);"></span>
+              <span class="visit-dot" style="top:60px;left:210px;background: var(--pink); width:9px;height:9px"></span>
+              <span class="visit-dot" style="top:140px;left:195px;background: var(--primary); width:9px;height:9px"></span>
+            </div>
+            <div class="titles">
+              <div class="display">기록할수록<br/>지도가 완성돼요</div>
+              <div class="body">방문한 나라와 도시가<br/>컬러로 채워지는 재미를 느껴보세요.</div>
+            </div>
+            <div class="footer-row">
+              <div class="dots"><span class="pdot"></span><span class="pdot active"></span><span class="pdot"></span></div>
+              <div class="next-btn">→</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. PERMISSION -->
+      <div class="frame">
+        <div class="label">3 · Permission</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="perm">
+            <div class="center">
+              <div class="pin-box">
+                📍
+                <div class="cam-badge">📷</div>
+              </div>
+              <h2>위치 접근 권한이<br/>필요해요</h2>
+              <p>방문한 지역을 자동으로 기록하고<br/>여행지 추천 서비스를 제공해드려요.</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+              <div class="button">권한 허용하기</div>
+              <div class="button ghost">나중에 하기</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. MAP -->
+      <div class="frame">
+        <div class="label">4 · Main Map</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="screen">
+            <div class="map-header">
+              <div>
+                <div class="pindy-mark">📍 Pindy</div>
+                <div class="caption" style="margin-top:4px;">여행은 색으로, 추억은 지도 위에.</div>
+              </div>
+              <div style="font-size:22px; color: var(--text);">🔔</div>
+            </div>
+            <div class="world-map">
+              <div class="wash"></div>
+              <!-- continents -->
+              <div class="continent" style="top:30px; left:30px; width:110px; height:80px; border-radius:24px; background: var(--yellow);"></div>
+              <div class="continent" style="top:130px; left:80px; width:70px; height:100px; border-radius:28px; background: var(--region-empty);"></div>
+              <div class="continent" style="top:30px; left:165px; width:70px; height:60px; border-radius:22px; background: var(--primary);"></div>
+              <div class="continent" style="top:100px; left:165px; width:80px; height:110px; border-radius:28px; background: var(--region-empty);"></div>
+              <div class="continent" style="top:30px; left:240px; width:110px; height:95px; border-radius:26px; background: var(--mint);"></div>
+              <div class="continent" style="top:165px; left:290px; width:70px; height:60px; border-radius:22px; background: var(--pink);"></div>
+              <div class="continent" style="top:50px; left:320px; width:22px; height:28px; border-radius:10px; background: var(--peach);"></div>
+
+              <div class="mini-card" style="top:16px; left:16px;">
+                <div class="num" style="color: var(--primary);">12 <span style="font-size:11px; color:var(--muted); font-weight:400;">/ 250</span></div>
+                <div class="lbl">방문한 시·군</div>
+              </div>
+              <div class="mini-card" style="top:16px; right:16px;">
+                <div class="num" style="color: var(--mint-dark);">8 <span style="font-size:11px; color:var(--muted); font-weight:400;">/ 1,200</span></div>
+                <div class="lbl">방문한 도·주</div>
+              </div>
+              <div class="icon-circle" style="position:absolute; bottom:20px; left:16px; color: var(--primary);">🎯</div>
+            </div>
+            <div class="card progress-card">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="h2">여행 진행률</div>
+                <div class="h2" style="color: var(--primary);">1.4%</div>
+              </div>
+              <div class="progress" style="margin-top:12px;"><div class="bar" style="width:8%;"></div></div>
+              <div style="display:flex; margin-top:16px;">
+                <div style="flex:1;">
+                  <div class="caption">방문한 시·군</div>
+                  <div style="margin-top:6px;"><span class="display" style="color:var(--primary)">12</span> <span class="caption">/ 250</span></div>
+                </div>
+                <div style="width:1px; background: var(--line); margin: 0 12px;"></div>
+                <div style="flex:1;">
+                  <div class="caption">방문한 도·주</div>
+                  <div style="margin-top:6px;"><span class="display" style="color:var(--mint-dark)">8</span> <span class="caption">/ 1,200</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab active"><span class="icon">🗺</span><span>지도</span></div>
+              <div class="tab"><span class="icon">⏱</span><span>타임라인</span></div>
+              <div class="tab add"><span class="icon">+</span></div>
+              <div class="tab"><span class="icon">📊</span><span>통계</span></div>
+              <div class="tab"><span class="icon">👤</span><span>프로필</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. TIMELINE -->
+      <div class="frame">
+        <div class="label">5 · Timeline</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="screen">
+            <div style="padding: 16px 20px 0; display:flex; justify-content:space-between; align-items:center;">
+              <div class="h1">타임라인</div>
+              <div style="display:flex; gap:8px; font-size:20px; color: var(--text);">🔍 ⚙</div>
+            </div>
+            <div class="filters">
+              <span class="pill primary-active">전체</span>
+              <span class="pill primary">국내</span>
+              <span class="pill primary">해외</span>
+            </div>
+            <div class="month-h">2024년 5월</div>
+            <div class="card trip-card">
+              <div class="trip-row">
+                <div class="date-badge"><div class="m">MAY</div><div class="d">12-18</div></div>
+                <div style="flex:1;">
+                  <div class="h2">유럽 여행</div>
+                  <div class="caption" style="margin-top:2px;">프랑스, 스페인</div>
+                  <div class="photo-strip">
+                    <div class="ph" style="background: linear-gradient(135deg,#FECDD3,#FB7185);"></div>
+                    <div class="ph" style="background: linear-gradient(135deg,#A7F3D0,#34D399);"></div>
+                    <div class="ph" style="background: linear-gradient(135deg,#FEF3C7,#FCD34D);"></div>
+                    <div class="ph" style="background: linear-gradient(135deg,#FCE7F3,#F9A8D4);">
+                      <div class="more">+23</div>
+                    </div>
+                  </div>
+                  <div class="caption" style="margin-top:12px;">🌍 2개 도·주 · 🏙 4개 도시</div>
+                </div>
+              </div>
+            </div>
+            <div class="month-h">2024년 2월</div>
+            <div class="card trip-card">
+              <div class="trip-row">
+                <div class="date-badge" style="background: var(--mint-wash);">
+                  <div class="m" style="color: var(--mint-dark);">FEB</div>
+                  <div class="d" style="color: var(--mint-dark);">3-7</div>
+                </div>
+                <div style="flex:1;">
+                  <div class="h2">일본 여행</div>
+                  <div class="caption" style="margin-top:2px;">도쿄, 오사카</div>
+                  <div class="photo-strip">
+                    <div class="ph" style="background: linear-gradient(135deg,#FCD34D,#F59E0B);"></div>
+                    <div class="ph" style="background: linear-gradient(135deg,#FB7185,#E11D48);"></div>
+                    <div class="ph" style="background: linear-gradient(135deg,#A7F3D0,#34D399);"></div>
+                    <div class="ph" style="background: linear-gradient(135deg,#FED7AA,#FB923C);">
+                      <div class="more">+15</div>
+                    </div>
+                  </div>
+                  <div class="caption" style="margin-top:12px;">🌍 2개 도·주 · 🏙 2개 도시</div>
+                </div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><span class="icon">🗺</span><span>지도</span></div>
+              <div class="tab active"><span class="icon">⏱</span><span>타임라인</span></div>
+              <div class="tab add"><span class="icon">+</span></div>
+              <div class="tab"><span class="icon">📊</span><span>통계</span></div>
+              <div class="tab"><span class="icon">👤</span><span>프로필</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. STATS -->
+      <div class="frame">
+        <div class="label">6 · Stats</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="screen">
+            <div style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+              <div class="h1">나의 여행 통계</div>
+              <div style="font-size:20px;">↗</div>
+            </div>
+            <div class="stat-row">
+              <div class="card stat-card">
+                <div class="caption">방문한 시·군</div>
+                <div style="display:flex; align-items:baseline; gap:4px; margin-top:8px;">
+                  <div class="v coral">12</div>
+                </div>
+                <div class="total">/ 250개</div>
+                <div class="icon" style="color: var(--primary);">🏙</div>
+              </div>
+              <div class="card stat-card">
+                <div class="caption">방문한 도·주</div>
+                <div style="display:flex; align-items:baseline; gap:4px; margin-top:8px;">
+                  <div class="v mint">8</div>
+                </div>
+                <div class="total">/ 1,200개</div>
+                <div class="icon" style="color: var(--mint-dark);">🌐</div>
+              </div>
+            </div>
+            <div class="card progress-card" style="margin-top:16px;">
+              <div style="display:flex; justify-content:space-between;">
+                <div class="h2">여행 진행률</div>
+                <div class="h2" style="color: var(--primary);">1.4%</div>
+              </div>
+              <div class="progress" style="margin-top:12px;"><div class="bar" style="width:8%;"></div></div>
+            </div>
+            <div style="padding: 16px 20px 0; display:flex; justify-content:space-between; align-items:center;">
+              <div class="h2">여행 스타일</div>
+              <div style="font-size:12px; color: var(--primary); font-weight:700;">더보기</div>
+            </div>
+            <div class="card" style="margin: 8px 20px 0; padding: 20px;">
+              <svg class="radar" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+                <!-- pentagon grid -->
+                <polygon points="120,40 200,98 168,180 72,180 40,98" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                <polygon points="120,60 180,103 156,170 84,170 60,103" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                <polygon points="120,80 160,108 144,160 96,160 80,108" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                <polygon points="120,100 140,113 132,150 108,150 100,113" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                <!-- data polygon -->
+                <polygon points="120,76 180,108 156,170 96,167 60,114"
+                  fill="#FECDD3" fill-opacity=".5" stroke="#FB7185" stroke-width="1.5"/>
+                <circle cx="120" cy="76" r="3" fill="#FB7185"/>
+                <circle cx="180" cy="108" r="3" fill="#FB7185"/>
+                <circle cx="156" cy="170" r="3" fill="#FB7185"/>
+                <circle cx="96" cy="167" r="3" fill="#FB7185"/>
+                <circle cx="60" cy="114" r="3" fill="#FB7185"/>
+                <!-- labels -->
+                <text x="120" y="30" font-size="11" fill="#6B7280" text-anchor="middle">휴양</text>
+                <text x="218" y="100" font-size="11" fill="#6B7280" text-anchor="middle">문화/역사</text>
+                <text x="180" y="200" font-size="11" fill="#6B7280" text-anchor="middle">자연</text>
+                <text x="58" y="200" font-size="11" fill="#6B7280" text-anchor="middle">미식</text>
+                <text x="22" y="100" font-size="11" fill="#6B7280" text-anchor="middle">도시</text>
+              </svg>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><span class="icon">🗺</span><span>지도</span></div>
+              <div class="tab"><span class="icon">⏱</span><span>타임라인</span></div>
+              <div class="tab add"><span class="icon">+</span></div>
+              <div class="tab active"><span class="icon">📊</span><span>통계</span></div>
+              <div class="tab"><span class="icon">👤</span><span>프로필</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. PROFILE -->
+      <div class="frame">
+        <div class="label">7 · Profile</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="screen">
+            <div class="profile-header">
+              <div class="h1">프로필</div>
+              <div style="font-size:20px;">⚙</div>
+            </div>
+            <div class="card profile-card">
+              <div class="profile-row">
+                <div class="avatar">여</div>
+                <div style="flex:1;">
+                  <div class="h1" style="font-size:18px;">여행자 Pindy</div>
+                  <div class="caption" style="margin-top:2px;">@pindy_travel</div>
+                </div>
+              </div>
+              <div class="body" style="color: var(--text); margin-top:12px;">
+                기록하고, 공유하고, 발견해요.<br/>여행의 삶을 컬러로 물들이는 중.
+              </div>
+              <div class="button secondary" style="margin-top:16px; height:44px; font-size:14px;">프로필 편집</div>
+            </div>
+            <div class="card" style="margin: 16px 20px 0; padding:16px;">
+              <div class="stat4">
+                <div class="col"><div class="v">12</div><div class="l">시·군</div></div>
+                <div class="div"></div>
+                <div class="col"><div class="v">8</div><div class="l">도·주</div></div>
+                <div class="div"></div>
+                <div class="col"><div class="v">14</div><div class="l">여행 일</div></div>
+                <div class="div"></div>
+                <div class="col"><div class="v">3</div><div class="l">배지</div></div>
+              </div>
+            </div>
+            <div style="padding: 24px 20px 12px; display:flex; justify-content:space-between; align-items:center;">
+              <div class="h2">나의 배지</div>
+              <div style="font-size:12px; color: var(--primary); font-weight:700;">모두 보기</div>
+            </div>
+            <div class="badge-row">
+              <div class="badge-card">
+                <div class="badge-circle" style="background: var(--badge-city);">
+                  <div class="inner">🏙</div>
+                  <div class="lv" style="border-color: var(--badge-city); color: var(--badge-city);">Lv.3</div>
+                </div>
+                <div class="name">도시 수집가</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-circle" style="background: var(--badge-explorer);">
+                  <div class="inner">🧭</div>
+                  <div class="lv" style="border-color: var(--badge-explorer); color: #B45309;">Lv.2</div>
+                </div>
+                <div class="name">탐험가</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-circle" style="background: var(--badge-photo);">
+                  <div class="inner">📸</div>
+                  <div class="lv" style="border-color: var(--badge-photo); color: var(--badge-photo);">Lv.1</div>
+                </div>
+                <div class="name">사진가</div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><span class="icon">🗺</span><span>지도</span></div>
+              <div class="tab"><span class="icon">⏱</span><span>타임라인</span></div>
+              <div class="tab add"><span class="icon">+</span></div>
+              <div class="tab"><span class="icon">📊</span><span>통계</span></div>
+              <div class="tab active"><span class="icon">👤</span><span>프로필</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. TRIP DETAIL -->
+      <div class="frame">
+        <div class="label">8 · Trip Detail</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar on-color"><span>9:41</span><span>● ●●●</span></div>
+          <div class="screen" style="padding-top:0;">
+            <div class="hero" style="background: linear-gradient(135deg,#FB7185,#E11D48);">
+              <div class="hero-overlay"></div>
+              <div class="hero-top">
+                <div class="icon-circle">‹</div>
+                <div style="display:flex; gap:12px;">
+                  <div class="icon-circle">↗</div>
+                  <div class="icon-circle">⋯</div>
+                </div>
+              </div>
+              <div class="hero-bot">
+                <div class="display">유럽 여행</div>
+                <div class="body">2024.05.12 - 05.18</div>
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                  <span class="pill translucent">2개 도·주</span>
+                  <span class="pill translucent">4개 도시</span>
+                </div>
+              </div>
+            </div>
+            <div class="tabs-card">
+              <div style="display:flex; gap:8px;">
+                <span class="pill primary">여행지</span>
+                <span class="pill primary-active">사진</span>
+                <span class="pill primary">메모</span>
+              </div>
+            </div>
+            <div class="photo-grid-3">
+              <div class="cell" style="background: linear-gradient(135deg,#FECDD3,#FB7185);"></div>
+              <div class="cell" style="background: linear-gradient(135deg,#A7F3D0,#34D399);"></div>
+              <div class="cell" style="background: linear-gradient(135deg,#FEF3C7,#FCD34D);"></div>
+              <div class="cell" style="background: linear-gradient(135deg,#FCE7F3,#F9A8D4);"></div>
+              <div class="cell" style="background: linear-gradient(135deg,#FED7AA,#FB923C);"></div>
+              <div class="cell" style="background: linear-gradient(135deg,#FECDD3,#FB7185);"></div>
+              <div class="cell" style="background: linear-gradient(135deg,#A7F3D0,#34D399); position:relative;">
+                <div class="more">+23</div>
+              </div>
+            </div>
+            <div class="bottom-cta">
+              <div class="btn">스토리 만들기</div>
+              <div class="btn share">공유</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. REGION DETAIL -->
+      <div class="frame">
+        <div class="label">9 · Region Detail</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="screen">
+            <div class="topbar">
+              <div style="font-size:24px;">‹</div>
+              <div></div>
+            </div>
+            <div class="region-h">
+              <div>
+                <div class="display">속초시</div>
+                <div class="body" style="margin-top:4px;">강원특별자치도, 한국</div>
+              </div>
+              <span class="pill primary">시·군</span>
+            </div>
+            <div class="region-map">
+              <div style="position:absolute; top:20px; left:30px; right:30px; bottom:20px; background:#E0F2FE; opacity:.4; border-radius:16px;"></div>
+              <div style="position:absolute; top:20px; left:60px; width:50px; height:35px; border-radius:14px; background: var(--region-empty); opacity:.85;"></div>
+              <div style="position:absolute; top:20px; left:120px; width:40px; height:30px; border-radius:14px; background: var(--region-empty); opacity:.85;"></div>
+              <div style="position:absolute; top:25px; left:170px; width:50px; height:55px; border-radius:18px; background: var(--primary); border:2px solid #fff;"></div>
+              <div style="position:absolute; top:65px; left:70px; width:60px; height:35px; border-radius:18px; background: var(--region-empty);"></div>
+              <div style="position:absolute; top:105px; left:65px; width:45px; height:50px; border-radius:18px; background: var(--region-empty);"></div>
+              <div style="position:absolute; top:105px; left:115px; width:55px; height:50px; border-radius:18px; background: var(--region-empty);"></div>
+              <div style="position:absolute; top:105px; left:175px; width:45px; height:45px; border-radius:18px; background: var(--region-empty);"></div>
+              <div style="position:absolute; bottom:16px; left:16px; right:16px; background:#fff; border-radius:20px; padding:10px 14px; display:flex; align-items:center; gap:8px; box-shadow: var(--shadow-soft);">
+                <span style="width:10px; height:10px; border-radius:5px; background: var(--primary);"></span>
+                <span style="font-size:14px; font-weight:600;">속초시</span>
+              </div>
+            </div>
+            <div class="caption" style="padding: 12px 20px 0;">🌍 방문 횟수 3회 · 📅 첫 방문 2024.05.12</div>
+            <div style="padding: 24px 20px 12px; display:flex; justify-content:space-between; align-items:center;">
+              <div class="h2">근처 지역</div>
+              <div style="font-size:12px; color: var(--primary); font-weight:700;">더보기</div>
+            </div>
+            <div style="display:flex; gap:12px; padding: 0 20px;">
+              <div style="text-align:center; width:64px;">
+                <div style="width:48px; height:48px; border-radius:24px; background: var(--primary-wash); margin: 0 auto; display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight:700; font-size:18px;">제</div>
+                <div class="caption" style="margin-top:6px;">제주시</div>
+              </div>
+              <div style="text-align:center; width:64px;">
+                <div style="width:48px; height:48px; border-radius:24px; background: var(--primary-wash); margin: 0 auto; display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight:700; font-size:18px;">여</div>
+                <div class="caption" style="margin-top:6px;">여수시</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. BADGES -->
+      <div class="frame">
+        <div class="label">10 · Badges</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="screen">
+            <div class="topbar"><div style="font-size:24px;">‹</div><div class="h1">나의 배지</div><div style="font-size:18px;">↗</div></div>
+            <div style="padding: 8px 20px 0;" class="body">
+              잠금 해제한 배지 <span style="color:var(--primary); font-weight:700;">3</span> / 6
+            </div>
+
+            <div class="b-section">
+              <div class="h2" style="padding: 16px 0 8px;">수집 배지</div>
+              <div class="b-row">
+                <div class="badge-card">
+                  <div class="badge-circle" style="background: var(--badge-city);">
+                    <div class="inner">🏙</div>
+                    <div class="lv" style="border-color: var(--badge-city); color: var(--badge-city);">Lv.3</div>
+                  </div>
+                  <div class="name">도시 수집가</div>
+                </div>
+                <div class="badge-card">
+                  <div class="badge-circle" style="background: var(--badge-explorer);">
+                    <div class="inner">🧭</div>
+                    <div class="lv" style="border-color: var(--badge-explorer); color:#B45309;">Lv.2</div>
+                  </div>
+                  <div class="name">탐험가</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="b-section">
+              <div class="h2" style="padding: 16px 0 8px;">사진 배지</div>
+              <div class="b-row">
+                <div class="badge-card">
+                  <div class="badge-circle" style="background: var(--badge-photo);">
+                    <div class="inner">📸</div>
+                    <div class="lv" style="border-color: var(--badge-photo); color: var(--badge-photo);">Lv.1</div>
+                  </div>
+                  <div class="name">사진가</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="b-section">
+              <div class="h2" style="padding: 16px 0 8px;">특별 배지</div>
+              <div class="b-row">
+                <div class="badge-card">
+                  <div class="badge-circle" style="background: var(--line-soft);">
+                    <div class="inner" style="color: var(--muted); font-size:24px;">🔒</div>
+                  </div>
+                  <div class="name" style="color: var(--muted);">얼리버드</div>
+                </div>
+                <div class="badge-card">
+                  <div class="badge-circle" style="background: var(--line-soft);">
+                    <div class="inner" style="color: var(--muted); font-size:24px;">🔒</div>
+                  </div>
+                  <div class="name" style="color: var(--muted);">미식가</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. ADD-TRIP MODAL -->
+      <div class="frame">
+        <div class="label">11 · Add-Trip Modal</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="modal">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div class="h1">새 여행 추가</div>
+              <div style="font-size:22px; color: var(--text);">×</div>
+            </div>
+            <div class="body" style="margin-bottom:16px;">어떤 방식으로 여행을 추가할까요?</div>
+
+            <div class="action-card">
+              <div class="ico" style="background: var(--primary-wash); color: var(--primary);">🖼</div>
+              <div style="flex:1;">
+                <div class="h2">사진으로 자동 생성</div>
+                <div class="caption" style="margin-top:4px;">갤러리에서 위치 정보가 있는 사진을 골라요.</div>
+              </div>
+              <div style="color: var(--sub);">›</div>
+            </div>
+
+            <div class="action-card">
+              <div class="ico" style="background: var(--mint-wash); color: var(--mint-dark);">✎</div>
+              <div style="flex:1;">
+                <div class="h2">직접 입력하기</div>
+                <div class="caption" style="margin-top:4px;">여행지·날짜·메모를 직접 입력해요.</div>
+              </div>
+              <div style="color: var(--sub);">›</div>
+            </div>
+
+            <div class="action-card">
+              <div class="ico" style="background: var(--yellow-wash); color: #B45309;">🔖</div>
+              <div style="flex:1;">
+                <div class="h2">여행지 저장하기</div>
+                <div class="caption" style="margin-top:4px;">나중에 가고 싶은 도시를 위시리스트에.</div>
+              </div>
+              <div style="color: var(--sub);">›</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12. STORY TEMPLATES -->
+      <div class="frame">
+        <div class="label">12 · Story · Templates</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar"><span>9:41</span><span>● ●●●</span></div>
+          <div class="screen">
+            <div class="topbar">
+              <div></div>
+              <div class="h1">스토리 만들기</div>
+              <div style="font-size:22px;">×</div>
+            </div>
+            <div class="filters" style="overflow-x:auto;">
+              <span class="pill primary-active">추천</span>
+              <span class="pill primary">감성</span>
+              <span class="pill primary">심플</span>
+              <span class="pill primary">여행</span>
+              <span class="pill primary">일상</span>
+            </div>
+            <div class="template-grid">
+              <div class="template-card" style="background: linear-gradient(135deg,#FECDD3,#FB7185);"><span class="label">클래식</span></div>
+              <div class="template-card" style="background: linear-gradient(135deg,#A7F3D0,#34D399);"><span class="label">콜라주 3장</span></div>
+              <div class="template-card" style="background: linear-gradient(135deg,#FEF3C7,#FCD34D);"><span class="label">폴라로이드</span></div>
+              <div class="template-card" style="background: linear-gradient(135deg,#FCE7F3,#F9A8D4);"><span class="label">수채화</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. STORY EDITOR -->
+      <div class="frame">
+        <div class="label">13 · Story · Editor</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="statusbar on-color"><span>9:41</span><span>● ●●●</span></div>
+          <div class="editor">
+            <div class="editor-top">
+              <div class="icon-circle">×</div>
+              <div style="display:flex; gap:12px;">
+                <div class="icon-circle">↶</div>
+                <div class="icon-circle">↷</div>
+              </div>
+              <div class="icon-circle" style="width:40px; height:40px; border-radius:20px; color: var(--primary); font-size:22px;">⤓</div>
+            </div>
+            <div class="editor-canvas-wrap">
+              <div class="canvas">
+                <div class="photo-slot" style="left:10%; top:15%; width:80%; height:50%;"></div>
+                <div class="text-slot" style="left:10%; top:70%; font-size:24px;">유럽 여행</div>
+                <div class="text-slot" style="left:10%; top:80%; font-size:11px; opacity:.9;">2024.05.12 - 05.18</div>
+                <div class="watermark">Pindy</div>
+              </div>
+            </div>
+            <div class="editor-tool-panel">
+              <div class="caption" style="margin-bottom:10px;">사진 슬롯을 누르면 다음 사진으로 바뀌어요.</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:#FAF7F2; border-radius:16px;">
+                <div class="body" style="color: var(--text);">Pindy 워터마크</div>
+                <div class="toggle"><div class="knob"></div></div>
+              </div>
+            </div>
+            <div class="editor-tabbar">
+              <div class="t active">▦<br/>레이아웃</div>
+              <div class="t">🎨<br/>배경</div>
+              <div class="t">T<br/>텍스트</div>
+              <div class="t">😊<br/>스티커</div>
+              <div class="t">⊙<br/>필터</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
