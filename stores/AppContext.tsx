@@ -7,6 +7,7 @@ import {
   visitedProvinces as initialProvinces,
   visitedSigungu as initialSigungu,
 } from '@/constants/mockData';
+import { mockBadges } from '@/constants/mockBadges';
 import type {
   PopularDestination,
   Region,
@@ -14,6 +15,7 @@ import type {
   TravelStyle,
   Trip,
 } from '@/types/travel';
+import type { Badge, BadgeId, BadgeLevel } from '@/types/badge';
 
 type AppState = {
   trips: Trip[];
@@ -25,6 +27,11 @@ type AppState = {
   addTrip: (trip: Trip) => void;
   markRegionVisited: (regionId: string) => void;
   removeTrip: (tripId: string) => void;
+
+  // v4 신규 — 기존 key 유지, 추가만
+  badges: Badge[];
+  unlockedBadgeCount: number;
+  updateBadgeProgress: (id: BadgeId, delta: number) => void;
 };
 
 const AppContext = createContext<AppState | null>(null);
@@ -33,6 +40,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [trips, setTrips] = useState<Trip[]>(initialTrips);
   const [sigungu, setSigungu] = useState<Region[]>(initialSigungu);
   const [provinces, setProvinces] = useState<Region[]>(initialProvinces);
+  const [badges, setBadges] = useState<Badge[]>(mockBadges);
 
   const addTrip = useCallback((trip: Trip) => {
     setTrips((prev) => [trip, ...prev]);
@@ -53,6 +61,36 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setProvinces((prev) => update(prev));
   }, []);
 
+  const updateBadgeProgress = useCallback((id: BadgeId, delta: number) => {
+    setBadges((prev) =>
+      prev.map((b) => {
+        if (b.id !== id) return b;
+        const next = b.progress + delta;
+        let nextLevel: BadgeLevel = 0;
+        for (let i = 0; i < b.thresholds.length; i++) {
+          const threshold = b.thresholds[i];
+          if (threshold !== undefined && next >= threshold) {
+            const lv = i + 1;
+            nextLevel = (lv > 5 ? 5 : lv) as BadgeLevel;
+          }
+        }
+        const upcoming =
+          b.thresholds[nextLevel] ?? b.thresholds[b.thresholds.length - 1] ?? next;
+        const wasLocked = b.level === 0 && nextLevel > 0;
+        return {
+          ...b,
+          progress: next,
+          level: nextLevel,
+          nextThreshold: upcoming,
+          unlockedAt:
+            wasLocked && !b.unlockedAt
+              ? new Date().toISOString().slice(0, 10)
+              : b.unlockedAt,
+        };
+      }),
+    );
+  }, []);
+
   const travelStats = useMemo<TravelStats>(() => {
     const visitedSig = sigungu.filter((r) => r.visited).length;
     const visitedProv = provinces.filter((r) => r.visited).length;
@@ -67,6 +105,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     };
   }, [sigungu, provinces]);
 
+  const unlockedBadgeCount = useMemo(
+    () => badges.filter((b) => b.level > 0).length,
+    [badges],
+  );
+
   const value = useMemo<AppState>(
     () => ({
       trips,
@@ -78,8 +121,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       addTrip,
       markRegionVisited,
       removeTrip,
+      badges,
+      unlockedBadgeCount,
+      updateBadgeProgress,
     }),
-    [trips, sigungu, provinces, travelStats, addTrip, markRegionVisited, removeTrip],
+    [
+      trips,
+      sigungu,
+      provinces,
+      travelStats,
+      addTrip,
+      markRegionVisited,
+      removeTrip,
+      badges,
+      unlockedBadgeCount,
+      updateBadgeProgress,
+    ],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

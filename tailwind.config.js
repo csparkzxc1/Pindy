@@ -27,6 +27,14 @@ module.exports = {
         pink: '#F9A8D4',
         pinkSoft: '#FCE7F3',
         peach: '#FED7AA',
+
+        // v4 신규 (badge)
+        badgeCity: '#FB7185',
+        badgeExplorer: '#FCD34D',
+        badgePhoto: '#A78BFA',
+        badgeEarly: '#34D399',
+        badgeWeekend: '#F9A8D4',
+        badgeFoodie: '#FB923C',
       },
     },
   },

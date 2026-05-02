@@ -152,6 +152,11 @@ export const trips: Trip[] = [
       { id: 'p3', from: '#FEF3C7', to: '#FCD34D' },
       { id: 'p4', from: '#FCE7F3', to: '#F9A8D4' },
     ],
+    hashtags: ['#파리여행', '#유럽여행', '#봄여행', '#감성여행'],
+    members: [
+      { id: 'me', nameInitial: '여', color: '#FB7185' },
+      { id: 'm1', nameInitial: '민', color: '#34D399' },
+    ],
   },
   {
     id: 'japan-2024',
@@ -173,6 +178,12 @@ export const trips: Trip[] = [
       { id: 'p2', from: '#FB7185', to: '#E11D48' },
       { id: 'p3', from: '#A7F3D0', to: '#34D399' },
       { id: 'p4', from: '#FED7AA', to: '#FB923C' },
+    ],
+    hashtags: ['#일본여행', '#도쿄', '#오사카', '#겨울여행'],
+    members: [
+      { id: 'me', nameInitial: '여', color: '#FB7185' },
+      { id: 'm2', nameInitial: '수', color: '#FCD34D' },
+      { id: 'm3', nameInitial: '준', color: '#A78BFA' },
     ],
   },
   {
@@ -196,6 +207,8 @@ export const trips: Trip[] = [
       { id: 'p3', from: '#FEF3C7', to: '#FCD34D' },
       { id: 'p4', from: '#A7F3D0', to: '#34D399' },
     ],
+    hashtags: ['#속초', '#강원도', '#국내여행', '#주말여행'],
+    members: [{ id: 'me', nameInitial: '여', color: '#FB7185' }],
   },
 ];
 

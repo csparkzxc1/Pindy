@@ -38,6 +38,25 @@ export const colors = {
 
   regionEmpty: '#E5E7EB',
   regionEmptyDark: '#D1D5DB',
+
+  // 배지 색상 (v4 신규)
+  badge: {
+    cityCollector: '#FB7185',
+    explorer: '#FCD34D',
+    photographer: '#A78BFA',
+    earlyBird: '#34D399',
+    weekendTraveler: '#F9A8D4',
+    foodie: '#FB923C',
+  },
+
+  // 스토리 템플릿 카테고리 색상 (v4 신규)
+  templateCategory: {
+    recommended: '#FB7185',
+    감성: '#F9A8D4',
+    심플: '#9CA3AF',
+    여행: '#34D399',
+    일상: '#FCD34D',
+  },
 } as const;
 
 export const radius = {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Share, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -38,10 +38,20 @@ export default function TripDetailScreen() {
     );
   }
 
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `Pindy로 만든 여행 — ${trip.title} (${trip.fullDateLabel})`,
+      });
+    } catch {
+      // user cancelled
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: 140 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Hero */}
@@ -52,13 +62,11 @@ export default function TripDetailScreen() {
             end={{ x: 1, y: 1 }}
             style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
           />
-          {/* Bottom darken overlay */}
           <LinearGradient
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.6)']}
             style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 200 }}
           />
 
-          {/* Top action row */}
           <View
             style={{
               position: 'absolute',
@@ -84,6 +92,7 @@ export default function TripDetailScreen() {
                 color={colors.text}
                 backgroundColor="#FFFFFF"
                 shadow
+                onPress={handleShare}
               />
               <IconButton
                 icon="ellipsis-horizontal"
@@ -95,7 +104,6 @@ export default function TripDetailScreen() {
             </View>
           </View>
 
-          {/* Bottom title */}
           <View
             style={{
               position: 'absolute',
@@ -153,7 +161,7 @@ export default function TripDetailScreen() {
           </View>
         </View>
 
-        {/* Content */}
+        {/* Tab content */}
         <View style={{ paddingHorizontal: 20, paddingTop: 16 }}>
           {activeTab === '사진' ? (
             <PhotoGrid
@@ -178,9 +186,7 @@ export default function TripDetailScreen() {
                     ...shadows.soft,
                   }}
                 >
-                  <Text style={{ ...typography.body, color: colors.text }}>
-                    {rid}
-                  </Text>
+                  <Text style={{ ...typography.body, color: colors.text }}>{rid}</Text>
                 </Pressable>
               ))}
             </View>
@@ -193,9 +199,89 @@ export default function TripDetailScreen() {
             </View>
           ) : null}
         </View>
+
+        {/* Members */}
+        {trip.members && trip.members.length > 0 ? (
+          <View style={{ paddingHorizontal: 20, marginTop: 24 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 12,
+              }}
+            >
+              <Text style={{ ...typography.h2, color: colors.text }}>여행 멤버</Text>
+              <Text style={{ ...typography.caption, color: colors.primary }}>
+                + 더보기
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              {trip.members.map((m, i) => (
+                <View
+                  key={m.id}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 18,
+                    backgroundColor: m.color,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF',
+                    marginLeft: i === 0 ? 0 : -10,
+                  }}
+                >
+                  <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>
+                    {m.nameInitial}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        {/* Hashtags */}
+        {trip.hashtags && trip.hashtags.length > 0 ? (
+          <View style={{ paddingHorizontal: 20, marginTop: 24 }}>
+            <Text
+              style={{ ...typography.h2, color: colors.text, marginBottom: 12 }}
+            >
+              여행 태그
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {trip.hashtags.map((tag) => (
+                <View
+                  key={tag}
+                  style={{
+                    backgroundColor: colors.primaryWash,
+                    paddingHorizontal: 10,
+                    paddingVertical: 6,
+                    borderRadius: radius.full,
+                  }}
+                >
+                  <Text
+                    style={{
+                      ...typography.caption,
+                      color: colors.primary,
+                      fontWeight: '600',
+                    }}
+                  >
+                    {tag}
+                  </Text>
+                </View>
+              ))}
+            </View>
+            <Text
+              style={{ ...typography.caption, color: colors.primary, marginTop: 12 }}
+            >
+              받은 12개 좋아요 보기
+            </Text>
+          </View>
+        ) : null}
       </ScrollView>
 
-      {/* Bottom CTA */}
+      {/* Bottom CTA — dual */}
       <View
         style={{
           position: 'absolute',
@@ -208,9 +294,28 @@ export default function TripDetailScreen() {
           backgroundColor: colors.bg,
           borderTopWidth: 1,
           borderTopColor: colors.lineSoft,
+          flexDirection: 'row',
+          gap: 8,
         }}
       >
-        <Button title="콜라주 만들기" variant="primary" size="lg" fullWidth />
+        <View style={{ flex: 2 }}>
+          <Button
+            title="스토리 만들기"
+            variant="primary"
+            size="lg"
+            fullWidth
+            onPress={() => router.push(`/story/templates?trip=${trip.id}`)}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            title="공유"
+            variant="secondary"
+            size="lg"
+            fullWidth
+            onPress={handleShare}
+          />
+        </View>
       </View>
     </View>
   );

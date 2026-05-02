@@ -22,9 +22,19 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="trip/[id]" options={{ animation: 'slide_from_right' }} />
             <Stack.Screen name="region/[id]" options={{ animation: 'slide_from_right' }} />
+            <Stack.Screen name="profile/settings" options={{ animation: 'slide_from_right' }} />
+            <Stack.Screen name="badges" options={{ animation: 'slide_from_right' }} />
             <Stack.Screen
               name="add-trip"
               options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
+              name="story/templates"
+              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
+              name="story/editor"
+              options={{ presentation: 'fullScreenModal' }}
             />
           </Stack>
         </AppProvider>

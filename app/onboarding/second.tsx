@@ -39,7 +39,7 @@ export default function OnboardingTwo() {
         <Text
           style={{ ...typography.display, color: colors.text, textAlign: 'center' }}
         >
-          사진으로 추억을 남기고{'\n'}스토리를 만드세요
+          기록할수록{'\n'}지도가 완성돼요
         </Text>
 
         <Text
@@ -50,7 +50,7 @@ export default function OnboardingTwo() {
             marginTop: 12,
           }}
         >
-          여행 사진을 정리하고{'\n'}멋진 콜라주와 스토리를 만들어보세요.
+          방문한 나라와 도시가{'\n'}컬러로 채워지는 재미를 느껴보세요.
         </Text>
 
         <View

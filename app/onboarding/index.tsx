@@ -42,7 +42,7 @@ export default function OnboardingOne() {
         <Text
           style={{ ...typography.display, color: colors.text, textAlign: 'center' }}
         >
-          여행을 기록하고{'\n'}세계를 컬러로 채워보세요
+          당신의 여행을,{'\n'}색으로 남기세요
         </Text>
 
         <Text
@@ -53,7 +53,7 @@ export default function OnboardingOne() {
             marginTop: 12,
           }}
         >
-          방문한 곳을 지도에 색칠하고{'\n'}나만의 여행 지도를 완성해보세요.
+          여행의 순간을 기록하고{'\n'}나만의 컬러로 세계를 채워보세요.
         </Text>
 
         {/* Bottom row */}

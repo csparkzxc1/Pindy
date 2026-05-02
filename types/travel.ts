@@ -30,6 +30,12 @@ export type PhotoPlaceholder = {
   to: string;
 };
 
+export type TripMember = {
+  id: string;
+  nameInitial: string;
+  color: string;
+};
+
 export type Trip = {
   id: string;
   title: string;
@@ -46,6 +52,11 @@ export type Trip = {
   coverColor: string;
   coverColorDark: string;
   photos: PhotoPlaceholder[];
+
+  // v4 신규 (optional, 기존 mock 호환)
+  hashtags?: string[];
+  members?: TripMember[];
+  isPublic?: boolean;
 };
 
 export type TravelStats = {
