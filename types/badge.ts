@@ -1,56 +1,28 @@
 export type BadgeId =
-  // existing
+  // collection (5)
   | 'city-collector'
   | 'explorer'
-  | 'photographer'
-  | 'early-bird'
-  | 'weekend-traveler'
-  | 'foodie'
-  // collection (extra)
   | 'country-hunter'
-  | 'continent-walker'
   | 'korea-master'
-  | 'asia-explorer'
-  | 'europe-explorer'
-  | 'americas-explorer'
-  | 'africa-explorer'
-  | 'oceania-explorer'
-  | 'island-hopper'
-  | 'coastal-traveler'
-  | 'mountain-climber'
-  | 'capital-collector'
-  | 'unesco-seeker'
-  | 'small-town-lover'
-  | 'metropolis-fan'
   | 'border-crosser'
-  // photo
-  | 'golden-hour'
-  | 'blue-hour'
-  | 'portrait-pro'
-  | 'landscape-master'
-  | 'food-blogger'
-  | 'street-shooter'
+  // photo (2)
+  | 'photographer'
   | 'memory-keeper'
-  // frequency
+  // frequency (11)
+  | 'weekend-traveler'
   | 'monthly-traveler'
   | 'spring-traveler'
   | 'summer-traveler'
   | 'autumn-traveler'
   | 'winter-traveler'
   | 'weekday-warrior'
-  | 'holiday-hunter'
   | 'long-trip'
   | 'quick-getaway'
   | 'consecutive-month'
   | 'four-seasons'
-  // special
-  | 'night-owl'
-  | 'coffee-lover'
-  | 'dessert-hunter'
-  | 'wine-traveler'
-  | 'festival-goer'
+  // special (5)
+  | 'foodie'
   | 'solo-explorer'
-  | 'family-tripper'
   | 'couple-getaway'
   | 'first-trip'
   | 'milestone-100';
