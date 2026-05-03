@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/components/layout/Screen';
@@ -18,9 +18,28 @@ const SECTIONS: { key: BadgeCategory; title: string }[] = [
   { key: 'special', title: '특별 배지' },
 ];
 
+const CHALLENGE_LIMIT = 5;
+
+/** Ratio of progress toward the next unlock or next-level threshold. */
+function nextLevelRatio(b: Badge): number {
+  if (b.level >= 5) return 1; // already maxed
+  if (b.nextThreshold <= 0) return 0;
+  return Math.min(1, b.progress / b.nextThreshold);
+}
+
 export default function BadgesScreen() {
   const { badges, unlockedBadgeCount } = useAppState();
   const [selected, setSelected] = useState<Badge | null>(null);
+
+  const challenging = useMemo<Badge[]>(() => {
+    return badges
+      .filter((b) => b.level < 5 && b.nextThreshold > 0)
+      .map((b) => ({ b, r: nextLevelRatio(b) }))
+      .filter((x) => x.r > 0 && x.r < 1)
+      .sort((a, b) => b.r - a.r)
+      .slice(0, CHALLENGE_LIMIT)
+      .map((x) => x.b);
+  }, [badges]);
 
   return (
     <Screen scroll>
@@ -43,6 +62,33 @@ export default function BadgesScreen() {
           / {badges.length}
         </Text>
       </View>
+
+      {challenging.length > 0 ? (
+        <View style={{ marginBottom: 24 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 6,
+              marginBottom: 12,
+            }}
+          >
+            <Ionicons name="flame" size={18} color={colors.primary} />
+            <Text style={{ ...typography.h2, color: colors.text }}>
+              도전 중
+            </Text>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 12, paddingVertical: 4 }}
+          >
+            {challenging.map((b) => (
+              <ChallengeCard key={b.id} badge={b} onPress={() => setSelected(b)} />
+            ))}
+          </ScrollView>
+        </View>
+      ) : null}
 
       {SECTIONS.map((section) => {
         const inSection = badges.filter((b) => b.category === section.key);
@@ -106,6 +152,40 @@ export default function BadgesScreen() {
         </Pressable>
       </Modal>
     </Screen>
+  );
+}
+
+function ChallengeCard({ badge, onPress }: { badge: Badge; onPress: () => void }) {
+  const locked = badge.level === 0;
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => ({
+        width: 156,
+        opacity: pressed ? 0.85 : 1,
+      })}
+    >
+      <Card padding={12}>
+        <View style={{ alignItems: 'center', marginBottom: 8 }}>
+          <BadgeCard badge={badge} size="sm" />
+        </View>
+        <Text
+          style={{
+            ...typography.caption,
+            color: colors.sub,
+            textAlign: 'center',
+            marginBottom: 6,
+          }}
+        >
+          {locked ? '잠금 해제까지' : `Lv.${badge.level + 1}까지`}
+        </Text>
+        <BadgeProgressBar
+          progress={badge.progress}
+          nextThreshold={badge.nextThreshold}
+          accent={badge.color}
+        />
+      </Card>
+    </Pressable>
   );
 }
 
