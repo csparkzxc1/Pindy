@@ -27,6 +27,8 @@ module.exports = {
         pink: '#F9A8D4',
         pinkSoft: '#FCE7F3',
         peach: '#FED7AA',
+        orange: '#FB923C',
+        orangeDark: '#EA580C',
 
         // v4 신규 (badge)
         badgeCity: '#FB7185',

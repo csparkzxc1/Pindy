@@ -27,6 +27,10 @@ export const colors = {
 
   peach: '#FED7AA',
 
+  // 주황 (CTA 강조 — 그라데이션 배경 위에 contrast)
+  orange: '#FB923C',
+  orangeDark: '#EA580C',
+
   region: [
     '#FB7185',
     '#34D399',
@@ -102,6 +106,13 @@ export const shadows = {
     shadowColor: '#FB7185',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  floatingOrange: {
+    shadowColor: '#FB923C',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
     shadowRadius: 16,
     elevation: 8,
   },
