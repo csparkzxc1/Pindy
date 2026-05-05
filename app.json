@@ -19,6 +19,7 @@
       }
     },
     "android": {
+      "package": "com.csparkzxc.pindy",
       "adaptiveIcon": {
         "backgroundColor": "#FAF7F2"
       }

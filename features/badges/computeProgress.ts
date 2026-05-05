@@ -1,17 +1,10 @@
 /**
  * Compute badge progress from raw Trip data.
  *
- * Two modes:
- *
- *  1. `computeAbsoluteProgress(trips, travelStyle)`
- *     The recommended source of truth. Returns absolute progress for every
- *     badge that can be derived from current data. Idempotent — running it
- *     again with the same input produces the same result. AppContext calls
- *     it whenever trips change.
- *
- *  2. `deltasFromTrip(trip)`  *(legacy / single-trip dispatch)*
- *     Returns deltas for a single newly-added trip. Useful when an add path
- *     wants to push a delta synchronously without a full recompute.
+ * `computeAbsoluteProgress(trips, travelStyle)` is the single source of truth.
+ * Returns absolute progress for every badge that can be derived from the
+ * current data. Idempotent — running it again with the same input produces
+ * the same result. AppContext calls it whenever trips change.
  */
 
 import type { BadgeId } from '@/types/badge';
@@ -103,7 +96,6 @@ export function computeAbsoluteProgress(
 ): BadgeProgressMap {
   const out: BadgeProgressMap = {};
 
-  // Counts ------------------------------------------------------------------
   let totalPhotos = 0;
   let totalCities = 0;
   let longCount = 0;
@@ -160,26 +152,28 @@ export function computeAbsoluteProgress(
     }
   }
 
-  // Existing automated -----------------------------------------------------
+  // Collection
   out['city-collector'] = totalCities;
-  out['photographer'] = totalPhotos;
-  out['memory-keeper'] = totalPhotos;
   out['country-hunter'] = overseasTripCount;
   out['korea-master'] = sigungu.size;
+  out['explorer'] = countries.size;
+  out['border-crosser'] = borderCount;
+
+  // Photo
+  out['photographer'] = totalPhotos;
+  out['memory-keeper'] = totalPhotos;
+
+  // Frequency
   out['long-trip'] = longCount;
   out['quick-getaway'] = quickCount;
   out['weekend-traveler'] = weekendCount;
+  out['weekday-warrior'] = weekdayCount;
+  out['monthly-traveler'] = monthSet.size;
+  out['consecutive-month'] = longestMonthStreak(trips);
   out['spring-traveler'] = seasons[0] ?? 0;
   out['summer-traveler'] = seasons[1] ?? 0;
   out['autumn-traveler'] = seasons[2] ?? 0;
   out['winter-traveler'] = seasons[3] ?? 0;
-
-  // Newly automated (10) ---------------------------------------------------
-  out['explorer'] = countries.size;
-  out['border-crosser'] = borderCount;
-  out['monthly-traveler'] = monthSet.size;
-  out['weekday-warrior'] = weekdayCount;
-  out['consecutive-month'] = longestMonthStreak(trips);
 
   let fourSeasonRegions = 0;
   for (const set of regionSeasons.values()) {
@@ -187,77 +181,14 @@ export function computeAbsoluteProgress(
   }
   out['four-seasons'] = fourSeasonRegions;
 
+  // Special
   out['solo-explorer'] = soloCount;
   out['couple-getaway'] = coupleCount;
   out['first-trip'] = trips.length >= 1 ? 1 : 0;
   out['milestone-100'] = trips.length;
-
-  // Foodie — TravelStyle 미식 점수 (0..1 → 0..100 scale)
   if (travelStyle) {
     out['foodie'] = Math.round((travelStyle.미식 ?? 0) * 100);
   }
 
   return out;
-}
-
-// ---------------------------------------------------------------------------
-// Single-trip deltas (legacy)
-// ---------------------------------------------------------------------------
-
-export type BadgeDelta = {
-  id: BadgeId;
-  delta: number;
-};
-
-/**
- * @deprecated Prefer `computeAbsoluteProgress(trips)` — it handles streaks,
- * sets, and idempotency that single-trip deltas can't express. Kept for
- * callers that only have one trip and want a quick dispatch.
- */
-export function deltasFromTrip(trip: Trip): BadgeDelta[] {
-  const deltas: BadgeDelta[] = [];
-
-  if (trip.cityCount > 0) {
-    deltas.push({ id: 'city-collector', delta: trip.cityCount });
-  }
-  if (trip.photoCount > 0) {
-    deltas.push({ id: 'photographer', delta: trip.photoCount });
-    deltas.push({ id: 'memory-keeper', delta: trip.photoCount });
-  }
-
-  if (trip.type === 'overseas') {
-    deltas.push({ id: 'country-hunter', delta: 1 });
-    deltas.push({ id: 'explorer', delta: trip.regionIds.length });
-  } else if (trip.type === 'domestic') {
-    deltas.push({ id: 'korea-master', delta: trip.regionIds.length });
-  }
-
-  const days = tripDays(trip);
-  if (days >= 7) deltas.push({ id: 'long-trip', delta: 1 });
-  if (days <= 2) deltas.push({ id: 'quick-getaway', delta: 1 });
-
-  const dow = tripStartDow(trip);
-  if (days <= 3 && (dow === 5 || dow === 6)) {
-    deltas.push({ id: 'weekend-traveler', delta: 1 });
-  }
-  if (dow >= 1 && dow <= 4) {
-    deltas.push({ id: 'weekday-warrior', delta: 1 });
-  }
-
-  const season = tripSeason(trip);
-  const seasonId: BadgeId =
-    season === 0
-      ? 'spring-traveler'
-      : season === 1
-        ? 'summer-traveler'
-        : season === 2
-          ? 'autumn-traveler'
-          : 'winter-traveler';
-  deltas.push({ id: seasonId, delta: 1 });
-
-  const m = (trip.members ?? []).length;
-  if (m === 1) deltas.push({ id: 'solo-explorer', delta: 1 });
-  else if (m === 2) deltas.push({ id: 'couple-getaway', delta: 1 });
-
-  return deltas;
 }

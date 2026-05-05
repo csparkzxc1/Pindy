@@ -1,21 +1,35 @@
 # Brand Assets
 
-Drop the following files here when ready (managed in a separate package):
+The user-supplied watercolor pin icon goes here. `app.json` references three
+PNGs at the project's `./assets/` root (one level above this folder).
 
+## Required files (place at `/Pindy/assets/`)
+
+| Path | Size | Purpose |
+|------|------|---------|
+| `assets/icon.png` | 1024×1024 PNG | iOS app icon, web favicon |
+| `assets/adaptive-icon.png` | 1024×1024 PNG (foreground only, transparent bg, ~20% safe padding) | Android adaptive icon |
+| `assets/splash.png` | 1242×2436+ PNG (or 1024×1024 with `resizeMode: contain`) | Splash screen |
+
+For the watercolor pin icon, the simplest path is to drop the same artwork
+into all three slots — Expo will scale it. iOS rounds the corners
+automatically; Android adaptive icon needs ~20% padding around the pin so it
+isn't clipped on circular masks.
+
+## After dropping the files
+
+```powershell
+git add assets/icon.png assets/adaptive-icon.png assets/splash.png
+git commit -m "Add Pindy app icon (watercolor coral pin)"
+git push origin claude/pindy-mvp-implementation-iaGeN
 ```
-icon.png                # 1024×1024, app icon (watercolor + coral pin)
-icon-foreground.png     # Android adaptive (foreground only)
-splash.png              # Splash screen
-wordmark.svg            # "Pindy" wordmark (coral hand-letter, P with small heart)
-wordmark-mono.svg       # Mono variant
-pin-mark.svg            # Simplified pin used in UI (NOT the watercolor version)
-```
 
-Until the real assets land, the app uses:
-- A text fallback Wordmark (`components/brand/Wordmark.tsx`).
-- An inline SVG pin (`components/brand/PinMark.tsx`).
-- Default Expo icon/splash via app.json (no custom icon paths).
+## Optional further assets
 
-Once assets arrive, point `app.json` `icon` / `splash.image` /
-`android.adaptiveIcon.foregroundImage` to the new files and replace the
-`Wordmark` component with the SVG version.
+| Path | Purpose |
+|------|---------|
+| `assets/brand/wordmark.svg` | Hand-lettered "Pindy" wordmark (currently a text fallback in `components/brand/Wordmark.tsx`) |
+| `assets/brand/wordmark-mono.svg` | Mono variant for dark backgrounds |
+| `assets/brand/pin-mark.svg` | Simplified pin used in UI (currently inline SVG in `components/brand/PinMark.tsx`) |
+
+These are nice-to-have. The app already renders text/SVG fallbacks for them.

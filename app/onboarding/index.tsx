@@ -73,14 +73,14 @@ export default function OnboardingOne() {
                 width: 56,
                 height: 56,
                 borderRadius: 28,
-                backgroundColor: pressed ? colors.primaryDark : colors.primary,
+                backgroundColor: pressed ? colors.orangeDark : colors.orange,
                 alignItems: 'center',
                 justifyContent: 'center',
               },
-              shadows.floating,
+              shadows.floatingOrange,
             ]}
           >
-            <Ionicons name="arrow-forward" size={24} color="#FFFFFF" />
+            <Ionicons name="arrow-forward" size={26} color="#FFFFFF" />
           </Pressable>
         </View>
       </View>
