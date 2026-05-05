@@ -93,7 +93,7 @@ export default function MapScreen() {
 
       {/* Progress summary */}
       <View style={{ marginTop: 16 }}>
-        <ProgressSummaryCard stats={travelStats} />
+        <ProgressSummaryCard stats={travelStats} mode={mode} />
       </View>
 
       <View style={{ height: 8 }} />
