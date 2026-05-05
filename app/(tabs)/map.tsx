@@ -1,17 +1,23 @@
+import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Wordmark } from '@/components/brand/Wordmark';
 import { PinMark } from '@/components/brand/PinMark';
 import { WorldMapPreview } from '@/components/map/WorldMapPreview';
+import { KoreaMapPreview } from '@/components/map/KoreaMapPreview';
 import { ProgressSummaryCard } from '@/components/map/ProgressSummaryCard';
+import { SegmentControl } from '@/components/ui/SegmentControl';
 import { IconButton } from '@/components/ui/IconButton';
 import { useAppState } from '@/stores/AppContext';
 import { colors, typography } from '@/constants/theme';
 
+type MapMode = 'domestic' | 'overseas';
+
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const { travelStats, visitedSigungu, visitedProvinces } = useAppState();
+  const [mode, setMode] = useState<MapMode>('domestic');
 
   const goToFirstDomestic = () => {
     const first = visitedSigungu[0];
@@ -57,15 +63,33 @@ export default function MapScreen() {
         />
       </View>
 
-      {/* World map */}
-      <WorldMapPreview
-        domesticVisited={travelStats.visitedSigungu}
-        domesticTotal={travelStats.totalSigungu}
-        overseasVisited={travelStats.visitedProvinces}
-        overseasTotal={travelStats.totalProvinces}
-        onPressDomestic={goToFirstDomestic}
-        onPressOverseas={goToFirstOverseas}
-      />
+      {/* Segment toggle */}
+      <View style={{ marginVertical: 16 }}>
+        <SegmentControl
+          options={[
+            { key: 'domestic', label: '🇰🇷 국내 · 시·군' },
+            { key: 'overseas', label: '🌍 해외 · 도·주' },
+          ]}
+          value={mode}
+          onChange={setMode}
+          accent={mode === 'domestic' ? 'primary' : 'mint'}
+        />
+      </View>
+
+      {/* Map preview */}
+      {mode === 'domestic' ? (
+        <KoreaMapPreview
+          visited={travelStats.visitedSigungu}
+          total={travelStats.totalSigungu}
+          onLocate={goToFirstDomestic}
+        />
+      ) : (
+        <WorldMapPreview
+          visited={travelStats.visitedProvinces}
+          total={travelStats.totalProvinces}
+          onLocate={goToFirstOverseas}
+        />
+      )}
 
       {/* Progress summary */}
       <View style={{ marginTop: 16 }}>
