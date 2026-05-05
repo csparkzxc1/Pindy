@@ -101,6 +101,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // Auto-recompute badges from trips + travelStyle. Idempotent.
   // Only updates badges whose ID appears in the absolute map; locked badges
   // that need extra infra (EXIF time, photo classifier, etc.) are left alone.
+  /*
   useEffect(() => {
     const absolute = computeAbsoluteProgress(trips, initialStyle);
     setBadges((prev) =>
@@ -112,7 +113,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }),
     );
   }, [trips]);
-
+*/
   const travelStats = useMemo<TravelStats>(() => {
     const visitedSig = sigungu.filter((r) => r.visited).length;
     const visitedProv = provinces.filter((r) => r.visited).length;

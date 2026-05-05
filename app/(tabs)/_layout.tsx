@@ -16,6 +16,7 @@ function CenterAddButton({ onPress }: { onPress?: () => void }) {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: -20,
+        alignSelf: 'center',
         ...shadows.floating,
       }}
     >
@@ -66,7 +67,7 @@ export default function TabLayout() {
           tabBarButton: () => (
             <CenterAddButton onPress={() => router.push('/add-trip')} />
           ),
-          href: null,
+          //href: null,
         }}
       />
       <Tabs.Screen
