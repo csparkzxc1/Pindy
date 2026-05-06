@@ -64,17 +64,19 @@ export default function OnboardingTwo() {
           <PageDots total={3} active={1} color={colors.mint} />
           <Pressable
             onPress={() => router.push('/onboarding/permission')}
-            style={({ pressed }) => [
-              {
-                width: 56,
-                height: 56,
-                borderRadius: 28,
-                backgroundColor: pressed ? colors.orangeDark : colors.orange,
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-              shadows.floatingOrange,
-            ]}
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 28,
+              backgroundColor: colors.mint,
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#34D399',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.25,
+              shadowRadius: 16,
+              elevation: 8,
+            }}
           >
             <Ionicons name="arrow-forward" size={26} color="#FFFFFF" />
           </Pressable>

@@ -68,17 +68,15 @@ export default function OnboardingOne() {
           <PageDots total={3} active={0} color={colors.primary} />
           <Pressable
             onPress={() => router.push('/onboarding/second')}
-            style={({ pressed }) => [
-              {
-                width: 56,
-                height: 56,
-                borderRadius: 28,
-                backgroundColor: pressed ? colors.orangeDark : colors.orange,
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-              shadows.floatingOrange,
-            ]}
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 28,
+              backgroundColor: colors.primary,
+              alignItems: 'center',
+              justifyContent: 'center',
+              ...shadows.floating,
+            }}
           >
             <Ionicons name="arrow-forward" size={26} color="#FFFFFF" />
           </Pressable>

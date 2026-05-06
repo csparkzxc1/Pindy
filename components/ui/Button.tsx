@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View, ViewStyle } from 'react-native';
 import { colors, radius, shadows } from '@/constants/theme';
 
@@ -26,6 +26,8 @@ export function Button({
   icon,
   fullWidth = false,
 }: ButtonProps) {
+  const [pressed, setPressed] = useState(false);
+
   const sizeStyle: ViewStyle =
     size === 'lg'
       ? { height: 56, paddingHorizontal: 24, borderRadius: radius.full }
@@ -35,23 +37,25 @@ export function Button({
 
   const textSize = size === 'lg' ? 16 : 14;
 
+  const baseStyle: ViewStyle = {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    opacity: disabled ? 0.4 : pressed ? 0.85 : 1,
+    backgroundColor: variantBg(variant, pressed),
+    width: fullWidth ? '100%' : undefined,
+    ...sizeStyle,
+    ...(variant === 'primary' || variant === 'mint' ? shadows.soft : {}),
+  };
+
   return (
     <Pressable
       onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       disabled={disabled || loading}
-      style={({ pressed }) => [
-        {
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row',
-          gap: 8,
-          opacity: disabled ? 0.4 : pressed ? 0.85 : 1,
-          backgroundColor: variantBg(variant, pressed),
-          width: fullWidth ? '100%' : undefined,
-        },
-        sizeStyle,
-        variant === 'primary' || variant === 'mint' ? shadows.soft : null,
-      ]}
+      style={baseStyle}
     >
       {loading ? (
         <ActivityIndicator color={variantText(variant)} size="small" />
