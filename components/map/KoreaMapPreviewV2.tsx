@@ -1,4 +1,4 @@
-﻿import React, { useMemo } from "react";
+﻿import React, { useMemo, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { geoMercator, geoPath } from "d3-geo";
@@ -8,16 +8,19 @@ import { colors, spacing, typography, radius, shadows } from "@/constants/theme"
 
 interface KoreaMapPreviewV2Props {
   visitedCodes?: string[];
+  onToggle?: (code: string) => void;
   width?: number;
   height?: number;
 }
 
 export function KoreaMapPreviewV2({
   visitedCodes = [],
+  onToggle,
   width = 320,
   height = 360,
 }: KoreaMapPreviewV2Props) {
   const visitedSet = useMemo(() => new Set(visitedCodes), [visitedCodes]);
+  const [lastTapped, setLastTapped] = useState<{ code: string; name: string } | null>(null);
 
   const paths = useMemo(() => {
     const projection = geoMercator().fitSize([width, height], sigunguGeoJSON as any);
@@ -32,6 +35,11 @@ export function KoreaMapPreviewV2({
 
   const visitedCount = visitedSet.size;
 
+  const handlePathPress = (code: string, name: string) => {
+    setLastTapped({ code, name });
+    onToggle?.(code);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -39,6 +47,11 @@ export function KoreaMapPreviewV2({
         <Text style={styles.subtitle}>
           <Text style={styles.count}>{visitedCount}</Text> / {SIGUNGU_TOTAL} 시·군
         </Text>
+        {lastTapped && (
+          <Text style={styles.lastTapped}>
+            {lastTapped.name} ({lastTapped.code}) {visitedSet.has(lastTapped.code) ? "✓ 방문" : "미방문"}
+          </Text>
+        )}
       </View>
 
       <View style={[styles.mapWrapper, { width, height }]}>
@@ -62,6 +75,7 @@ export function KoreaMapPreviewV2({
                   fill={visited ? colors.primary : colors.lineSoft}
                   stroke={colors.bgAlt}
                   strokeWidth={0.5}
+                  onPress={() => handlePathPress(p.code, p.name)}
                 />
               );
             })}
@@ -94,6 +108,12 @@ const styles = StyleSheet.create({
   count: {
     color: colors.primary,
     fontWeight: "700",
+  },
+  lastTapped: {
+    ...typography.caption,
+    color: colors.sub,
+    marginTop: spacing.xs,
+    fontWeight: "500",
   },
   mapWrapper: {
     overflow: "hidden",

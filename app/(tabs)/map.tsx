@@ -1,5 +1,5 @@
-﻿import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+﻿import { useCallback, useState } from 'react';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Wordmark } from '@/components/brand/Wordmark';
@@ -10,6 +10,7 @@ import { ProgressSummaryCard } from '@/components/map/ProgressSummaryCard';
 import { SegmentControl } from '@/components/ui/SegmentControl';
 import { IconButton } from '@/components/ui/IconButton';
 import { useAppState } from '@/stores/AppContext';
+import { importPhotosAndMatchSigungu } from '@/utils/photoImporter';
 import { colors, typography } from '@/constants/theme';
 
 type MapMode = 'domestic' | 'overseas';
@@ -18,6 +19,27 @@ export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const { travelStats, visitedSigungu, visitedProvinces } = useAppState();
   const [mode, setMode] = useState<MapMode>('domestic');
+  const [visitedCodes, setVisitedCodes] = useState<string[]>([]);
+
+  const handleToggle = useCallback((code: string) => {
+    setVisitedCodes((prev) =>
+      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
+    );
+  }, []);
+
+  const handleImportPhotos = useCallback(async () => {
+    try {
+      const r = await importPhotosAndMatchSigungu();
+      if (r.canceled) return;
+      setVisitedCodes((prev) => Array.from(new Set([...prev, ...r.matchedCodes])));
+      Alert.alert(
+        '사진 분석 완료',
+        r.totalSelected + '장 중 ' + r.withGps + '장에 위치 정보\n' + r.matchedCodes.length + '개 시·군 발견!'
+      );
+    } catch (e: any) {
+      Alert.alert('오류', e.message ?? '사진 가져오기 실패');
+    }
+  }, []);
 
   const goToFirstDomestic = () => {
     const first = visitedSigungu[0];
@@ -76,9 +98,27 @@ export default function MapScreen() {
         />
       </View>
 
+      {/* Photo import button */}
+      {mode === 'domestic' && (
+        <Pressable
+          onPress={handleImportPhotos}
+          style={{
+            marginTop: 12,
+            marginBottom: 12,
+            padding: 14,
+            backgroundColor: '#FB7185',
+            borderRadius: 12,
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ color: '#FFFFFF', fontWeight: '700', fontSize: 14 }}>
+            📷 사진에서 가져오기
+          </Text>
+        </Pressable>
+      )}
       {/* Map preview */}
       {mode === 'domestic' ? (
-        <KoreaMapPreviewV2 visitedCodes={[]} />
+        <KoreaMapPreviewV2 visitedCodes={visitedCodes} onToggle={handleToggle} />
       ) : (
         <WorldMapPreview
           visited={travelStats.visitedProvinces}
