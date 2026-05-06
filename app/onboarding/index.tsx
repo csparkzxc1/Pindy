@@ -23,7 +23,6 @@ export default function OnboardingOne() {
           paddingBottom: insets.bottom + 32,
         }}
       >
-        {/* Skip */}
         <View style={{ alignItems: 'flex-end' }}>
           <Pressable
             onPress={() => router.replace('/(tabs)/map')}
@@ -33,12 +32,10 @@ export default function OnboardingOne() {
           </Pressable>
         </View>
 
-        {/* Illustration */}
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <OnboardingIllustration1 />
         </View>
 
-        {/* Title */}
         <Text
           style={{ ...typography.display, color: colors.text, textAlign: 'center' }}
         >
@@ -56,7 +53,6 @@ export default function OnboardingOne() {
           여행의 순간을 기록하고{'\n'}나만의 컬러로 세계를 채워보세요.
         </Text>
 
-        {/* Bottom row */}
         <View
           style={{
             flexDirection: 'row',

@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { OnboardingIllustration2 } from '@/components/onboarding/OnboardingIllustration2';
 import { PageDots } from '@/components/ui/PageDots';
-import { colors, shadows, typography } from '@/constants/theme';
+import { colors, typography } from '@/constants/theme';
 
 export default function OnboardingTwo() {
   const insets = useSafeAreaInsets();

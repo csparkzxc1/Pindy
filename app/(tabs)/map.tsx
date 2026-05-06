@@ -1,11 +1,11 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Wordmark } from '@/components/brand/Wordmark';
 import { PinMark } from '@/components/brand/PinMark';
 import { WorldMapPreview } from '@/components/map/WorldMapPreview';
-import { KoreaMapPreview } from '@/components/map/KoreaMapPreview';
+import { KoreaMapPreviewV2 } from '@/components/map/KoreaMapPreviewV2';
 import { ProgressSummaryCard } from '@/components/map/ProgressSummaryCard';
 import { SegmentControl } from '@/components/ui/SegmentControl';
 import { IconButton } from '@/components/ui/IconButton';
@@ -53,7 +53,7 @@ export default function MapScreen() {
             <Wordmark size={28} showHeart={false} />
           </View>
           <Text style={{ ...typography.body, color: colors.sub, marginTop: 4 }}>
-            여행은 색으로, 추억은 지도 위에.
+            ?ы뻾? ?됱쑝濡? 異붿뼲? 吏???꾩뿉.
           </Text>
         </View>
         <IconButton
@@ -67,8 +67,8 @@ export default function MapScreen() {
       <View style={{ marginVertical: 16 }}>
         <SegmentControl
           options={[
-            { key: 'domestic', label: '🇰🇷 국내 · 시·군' },
-            { key: 'overseas', label: '🌍 해외 · 도·주' },
+            { key: 'domestic', label: '?눖?눟 援?궡 쨌 ?쑣룰뎔' },
+            { key: 'overseas', label: '?뙇 ?댁쇅 쨌 ?꽷룹＜' },
           ]}
           value={mode}
           onChange={setMode}
@@ -78,11 +78,7 @@ export default function MapScreen() {
 
       {/* Map preview */}
       {mode === 'domestic' ? (
-        <KoreaMapPreview
-          visited={travelStats.visitedSigungu}
-          total={travelStats.totalSigungu}
-          onLocate={goToFirstDomestic}
-        />
+        <KoreaMapPreviewV2 visitedCodes={[]} />
       ) : (
         <WorldMapPreview
           visited={travelStats.visitedProvinces}
