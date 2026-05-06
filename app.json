@@ -1,3 +1,4 @@
+```json
 {
   "expo": {
     "name": "Pindy",
@@ -7,7 +8,9 @@
     "scheme": "pindy",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#FAF7F2"
     },
@@ -21,11 +24,13 @@
     "android": {
       "package": "com.csparkzxc.pindy",
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FAF7F2"
       }
     },
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router"
@@ -44,3 +49,4 @@
     "owner": "csparkzxc"
   }
 }
+```
