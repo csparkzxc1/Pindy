@@ -1,4 +1,4 @@
-﻿import React, { useMemo, useState, useCallback } from "react";
+﻿import React, { useMemo, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Path, Text as SvgText } from "react-native-svg";
 import { geoMercator, geoPath, geoCentroid } from "d3-geo";
@@ -20,29 +20,48 @@ function shortName(name: string): string {
   return name;
 }
 
+const PROVINCE_NAMES: Record<string, string> = { "31": "경기", "32": "강원", "33": "충북", "34": "충남", "35": "전북", "36": "전남", "37": "경북", "38": "경남" };
+
 export function KoreaMapPreviewV2({ visitedCodes = [], onToggle, width = 320, height = 360 }: KoreaMapPreviewV2Props) {
   const visitedSet = useMemo(() => new Set(visitedCodes), [visitedCodes]);
   const [lastTapped, setLastTapped] = useState<{ code: string; name: string } | null>(null);
-  const [zoom, setZoom] = useState(1);
 
-  const paths = useMemo(() => {
+  const { paths, metroLabels, provinceLabels } = useMemo(() => {
     const projection = geoMercator().fitSize([width, height], sigunguGeoJSON as any);
     const pathGenerator = geoPath(projection as any);
 
-    return sigunguGeoJSON.features.map((f) => {
-      const centroid = geoCentroid(f as any);
-      const projected = projection(centroid as [number, number]);
-      const isMetro = f.properties.code.endsWith("000");
-      return {
-        code: f.properties.code,
-        name: f.properties.name,
-        shortName: shortName(f.properties.name),
-        d: pathGenerator(f as any) ?? "",
-        labelX: projected ? projected[0] : 0,
-        labelY: projected ? projected[1] : 0,
-        isMetro,
-      };
+    const allPaths = sigunguGeoJSON.features.map((f) => ({
+      code: f.properties.code,
+      name: f.properties.name,
+      d: pathGenerator(f as any) ?? "",
+    }));
+
+    const metros = sigunguGeoJSON.features.filter((f) => f.properties.code.endsWith("000")).map((f) => {
+      const c = geoCentroid(f as any);
+      const p = projection(c as [number, number]);
+      return { code: f.properties.code, name: shortName(f.properties.name), x: p ? p[0] : 0, y: p ? p[1] : 0 };
     });
+
+    const groups: Record<string, { lons: number[]; lats: number[] }> = {};
+    for (const f of sigunguGeoJSON.features) {
+      const code = f.properties.code;
+      if (code.endsWith("000")) continue;
+      const prefix = code.substring(0, 2);
+      if (!PROVINCE_NAMES[prefix]) continue;
+      if (!groups[prefix]) groups[prefix] = { lons: [], lats: [] };
+      const c = geoCentroid(f as any);
+      groups[prefix].lons.push(c[0]);
+      groups[prefix].lats.push(c[1]);
+    }
+
+    const provinces = Object.entries(groups).map(([prefix, g]) => {
+      const avgLon = g.lons.reduce((a, b) => a + b, 0) / g.lons.length;
+      const avgLat = g.lats.reduce((a, b) => a + b, 0) / g.lats.length;
+      const p = projection([avgLon, avgLat]);
+      return { name: PROVINCE_NAMES[prefix], x: p ? p[0] : 0, y: p ? p[1] : 0 };
+    });
+
+    return { paths: allPaths, metroLabels: metros, provinceLabels: provinces };
   }, [width, height]);
 
   const visitedCount = visitedSet.size;
@@ -51,16 +70,6 @@ export function KoreaMapPreviewV2({ visitedCodes = [], onToggle, width = 320, he
     setLastTapped({ code, name });
     onToggle?.(code);
   };
-
-  const handleZoomAfter = useCallback((_e: any, _g: any, z: any) => {
-    if (z && typeof z.zoomLevel === "number") {
-      setZoom(z.zoomLevel);
-    }
-  }, []);
-
-  // 줌 레벨에 반비례하는 폰트 크기 (화면상 일정 크기 유지)
-  const metroFontSize = Math.max(2.5, 5 / Math.sqrt(zoom));
-  const cityFontSize = Math.max(2, 3.5 / Math.sqrt(zoom));
 
   return (
     <View style={styles.container}>
@@ -77,7 +86,7 @@ export function KoreaMapPreviewV2({ visitedCodes = [], onToggle, width = 320, he
       </View>
 
       <View style={[styles.mapWrapper, { width, height }]}>
-        <ReactNativeZoomableView maxZoom={10} minZoom={1} zoomStep={0.5} initialZoom={1} bindToBorders={true} doubleTapZoomToCenter={false} contentWidth={width} contentHeight={height} onZoomAfter={handleZoomAfter}>
+        <ReactNativeZoomableView maxZoom={15} minZoom={1} zoomStep={0.5} initialZoom={1} bindToBorders={true} doubleTapZoomToCenter={false} contentWidth={width} contentHeight={height}>
           <Svg width={width} height={height}>
             {paths.map((p) => {
               const visited = visitedSet.has(p.code);
@@ -85,15 +94,16 @@ export function KoreaMapPreviewV2({ visitedCodes = [], onToggle, width = 320, he
                 <Path key={p.code} d={p.d} fill={visited ? colors.primary : colors.lineSoft} stroke={colors.bgAlt} strokeWidth={0.5} onPress={() => handlePathPress(p.code, p.name)} />
               );
             })}
-            {paths.map((p) => {
-              // 광역시: 항상 표시. 시/군: 줌 2x 이상에서만
-              if (!p.isMetro && zoom < 2) return null;
-              return (
-                <SvgText key={"label-" + p.code} x={p.labelX} y={p.labelY} fontSize={p.isMetro ? metroFontSize : cityFontSize} fontWeight={p.isMetro ? "700" : "500"} textAnchor="middle" fill={visitedSet.has(p.code) ? colors.bgAlt : colors.text} pointerEvents="none">
-                  {p.shortName}
-                </SvgText>
-              );
-            })}
+            {provinceLabels.map((l) => (
+              <SvgText key={"prov-" + l.name} x={l.x} y={l.y} fontSize={9} fontWeight="600" textAnchor="middle" fill={colors.sub} pointerEvents="none">
+                {l.name}
+              </SvgText>
+            ))}
+            {metroLabels.map((l) => (
+              <SvgText key={"metro-" + l.code} x={l.x} y={l.y} fontSize={10} fontWeight="700" textAnchor="middle" fill={visitedSet.has(l.code) ? colors.bgAlt : colors.text} pointerEvents="none">
+                {l.name}
+              </SvgText>
+            ))}
           </Svg>
         </ReactNativeZoomableView>
       </View>
