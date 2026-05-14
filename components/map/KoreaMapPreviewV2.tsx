@@ -1,4 +1,4 @@
-﻿import React, { useMemo, useState } from "react";
+﻿import React, { useMemo, useState, useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Path, Text as SvgText } from "react-native-svg";
 import { geoMercator, geoPath, geoCentroid } from "d3-geo";
@@ -22,9 +22,12 @@ function shortName(name: string): string {
 
 const PROVINCE_NAMES: Record<string, string> = { "31": "경기", "32": "강원", "33": "충북", "34": "충남", "35": "전북", "36": "전남", "37": "경북", "38": "경남" };
 
+const LABEL_HIDE_ZOOM = 2;
+
 export function KoreaMapPreviewV2({ visitedCodes = [], onToggle, width = 320, height = 360 }: KoreaMapPreviewV2Props) {
   const visitedSet = useMemo(() => new Set(visitedCodes), [visitedCodes]);
   const [lastTapped, setLastTapped] = useState<{ code: string; name: string } | null>(null);
+  const [zoom, setZoom] = useState(1);
 
   const { paths, metroLabels, provinceLabels } = useMemo(() => {
     const projection = geoMercator().fitSize([width, height], sigunguGeoJSON as any);
@@ -71,6 +74,14 @@ export function KoreaMapPreviewV2({ visitedCodes = [], onToggle, width = 320, he
     onToggle?.(code);
   };
 
+  const handleZoomAfter = useCallback((_e: any, _g: any, z: any) => {
+    if (z && typeof z.zoomLevel === "number") {
+      setZoom(z.zoomLevel);
+    }
+  }, []);
+
+  const showLabels = zoom <= LABEL_HIDE_ZOOM;
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -86,7 +97,7 @@ export function KoreaMapPreviewV2({ visitedCodes = [], onToggle, width = 320, he
       </View>
 
       <View style={[styles.mapWrapper, { width, height }]}>
-        <ReactNativeZoomableView maxZoom={15} minZoom={1} zoomStep={0.5} initialZoom={1} bindToBorders={true} doubleTapZoomToCenter={false} contentWidth={width} contentHeight={height}>
+        <ReactNativeZoomableView maxZoom={15} minZoom={1} zoomStep={0.5} initialZoom={1} bindToBorders={true} doubleTapZoomToCenter={false} contentWidth={width} contentHeight={height} onZoomAfter={handleZoomAfter}>
           <Svg width={width} height={height}>
             {paths.map((p) => {
               const visited = visitedSet.has(p.code);
@@ -94,12 +105,12 @@ export function KoreaMapPreviewV2({ visitedCodes = [], onToggle, width = 320, he
                 <Path key={p.code} d={p.d} fill={visited ? colors.primary : colors.lineSoft} stroke={colors.bgAlt} strokeWidth={0.5} onPress={() => handlePathPress(p.code, p.name)} />
               );
             })}
-            {provinceLabels.map((l) => (
+            {showLabels && provinceLabels.map((l) => (
               <SvgText key={"prov-" + l.name} x={l.x} y={l.y} fontSize={9} fontWeight="600" textAnchor="middle" fill={colors.sub} pointerEvents="none">
                 {l.name}
               </SvgText>
             ))}
-            {metroLabels.map((l) => (
+            {showLabels && metroLabels.map((l) => (
               <SvgText key={"metro-" + l.code} x={l.x} y={l.y} fontSize={10} fontWeight="700" textAnchor="middle" fill={visitedSet.has(l.code) ? colors.bgAlt : colors.text} pointerEvents="none">
                 {l.name}
               </SvgText>
